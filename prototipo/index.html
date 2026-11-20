@@ -295,6 +295,19 @@ main.largo { max-width: 760px; }
 .tv-roda li { background: color-mix(in srgb, var(--hero-fg) 14%, transparent); color: var(--hero-fg); }
 .tv-roda li.seta { background: none; color: var(--hero-ouro); }
 .btn.ouro { background: var(--hero-ouro); color: var(--hero); }
+.btn.vidro { background: color-mix(in srgb, var(--hero-fg) 16%, transparent); color: var(--hero-fg); }
+
+/* Tela cheia (para a TV) */
+#app:fullscreen { max-width: none; width: 100%; height: 100%; margin: 0; padding: 0; background: var(--hero); overflow: auto; }
+#app:fullscreen::backdrop { background: var(--hero); }
+#app:fullscreen .tela { min-height: 100%; gap: 0; }
+#app:fullscreen .tela > .sutil { display: none; }
+#app:fullscreen .tv { flex: 1; border-radius: 0; justify-content: center; gap: 4vh; }
+#app:fullscreen .tv .sobre { font-size: 2.2vw; }
+#app:fullscreen .tv-de { font-size: 6vw; }
+#app:fullscreen .tv-para { font-size: 13vw; }
+#app:fullscreen .tv .btn { font-size: 24px; padding: 18px 30px; }
+#app:fullscreen .tv-roda { font-size: 22px; }
 @media (prefers-reduced-motion: reduce) { .tv-para.oculto { animation: none; } }
 </style>
 
@@ -696,14 +709,17 @@ function telaNatal() {
   if (!estado.sorteio) { estado.sorteio = sortear(estado.pessoas, estado.restricoes); estado.natalAuto = true; }
   const S = estado.sorteio, n = S.length, i = estado.natalPasso, P = estado.pessoas;
   const rodape = `${estado.natalAuto ? '<p class="sutil">Na simulação, o sorteio foi feito agora só para mostrar esta tela.</p>' : ''}
-    <p class="sutil">Abra esta tela na TV na hora da troca. A família tenta adivinhar, você toca em "Revelar" e o presente é entregue. Quem recebeu é o próximo da roda.</p>`;
+    <p class="sutil">Abra esta tela na TV na hora da troca. A família tenta adivinhar, você toca em "Revelar" e o presente é entregue. Quem recebeu é o próximo da roda.</p>
+    <p class="sutil">No computador, a barra de espaço ou a seta → também avançam. Para sair da tela cheia, aperte Esc.</p>
+    <p class="erro" id="aviso-tela" hidden>Este aparelho não permite tela cheia em sites; o iPhone, por exemplo, não permite. Para a TV, abra esta tela num computador ligado à TV, ou espelhe a tela do celular e deixe-o na horizontal.</p>`;
+  const botaoTela = `<button class="btn vidro" id="tela-cheia">${document.fullscreenElement ? 'Sair da tela cheia' : '⛶ Tela cheia'}</button>`;
   if (i >= n) {
     return `<div class="tela"><section class="tv"><div class="neve" aria-hidden="true"></div>
       <span class="sobre">Noite de Natal</span>
       <p class="tv-para">Feliz Natal!</p>
       <p class="tv-de">A roda dos Mendoncinhas</p>
       <ol class="roda tv-roda">${S.map(id => `<li>${esc(P[id].nome)}</li><li class="seta" aria-hidden="true">→</li>`).join('')}<li>${esc(P[S[0]].nome)}</li></ol>
-      <div class="btn-linha"><button class="btn ouro" id="natal-reinicia">Começar de novo</button></div>
+      <div class="btn-linha"><button class="btn ouro" id="natal-reinicia">Começar de novo</button>${botaoTela}</div>
     </section>${rodape}</div>`;
   }
   return `<div class="tela"><section class="tv"><div class="neve" aria-hidden="true"></div>
@@ -712,7 +728,7 @@ function telaNatal() {
     <p class="tv-para ${estado.natalRevelado ? '' : 'oculto'}" id="tv-para">${estado.natalRevelado ? esc(P[S[(i + 1) % n]].nome) : '?'}</p>
     <div class="btn-linha">${estado.natalRevelado
       ? `<button class="btn ouro" id="natal-prox">${i + 1 === n ? 'Ver a roda completa' : 'Próximo →'}</button>`
-      : '<button class="btn ouro" id="natal-revela">Revelar</button>'}</div>
+      : '<button class="btn ouro" id="natal-revela">Revelar</button>'}${botaoTela}</div>
   </section>${rodape}</div>`;
 }
 function ligaNatal() {
@@ -720,7 +736,27 @@ function ligaNatal() {
   if (rv) rv.onclick = () => { estado.natalRevelado = true; render(); const r = $('#tv-para').getBoundingClientRect(); confete(r.left + r.width / 2, r.top + r.height / 2); };
   const px = $('#natal-prox'); if (px) px.onclick = () => { estado.natalPasso++; estado.natalRevelado = false; render(); };
   const ri = $('#natal-reinicia'); if (ri) ri.onclick = () => { estado.natalPasso = 0; estado.natalRevelado = false; render(); };
+  $('#tela-cheia').onclick = async () => {
+    const app = $('#app');
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else if (app.requestFullscreen) await app.requestFullscreen();
+      else if (app.webkitRequestFullscreen) app.webkitRequestFullscreen();
+      else throw new Error('sem tela cheia');
+    } catch (e) { const a = $('#aviso-tela'); if (a) a.hidden = false; }
+  };
 }
+document.addEventListener('fullscreenchange', () => {
+  if (rota() === 'natal') render();
+  else if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+});
+document.addEventListener('keydown', e => {
+  if (rota() !== 'natal') return;
+  const avancar = e.key === 'ArrowRight' || ((e.key === ' ' || e.key === 'Enter') && document.activeElement?.tagName !== 'BUTTON');
+  if (!avancar) return;
+  const b = $('#natal-revela') || $('#natal-prox');
+  if (b) { e.preventDefault(); b.click(); }
+});
 
 const TELAS = { cadastro: [telaCadastro, ligaCadastro], sugestao: [telaSugestao, ligaSugestao], revelacao: [telaRevelacao, ligaRevelacao], admin: [telaAdmin, ligaAdmin], natal: [telaNatal, ligaNatal] };
 function rota() { const h = location.hash.slice(1); return TELAS[h] ? h : 'cadastro'; }

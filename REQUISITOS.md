@@ -117,6 +117,8 @@ O administrador abre e fecha cada fase.
   - aparece "Fulano tirou…" e o nome fica escondido até o administrador tocar em "Revelar", com confete;
   - quem recebeu o presente é o próximo da roda;
   - no final aparece "Feliz Natal!" com a roda completa.
+  - botão **Tela cheia** para mostrar na TV. No computador, a barra de espaço ou a seta → avançam
+    e Esc sai da tela cheia. Onde o aparelho não permite, por exemplo no iPhone, o site explica a alternativa.
 
 ## 11. Requisitos não funcionais
 
