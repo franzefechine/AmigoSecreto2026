@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
 <style>
 /* Layout: uma coluna estreita de celular, centralizada; barra de simulação no topo troca entre as telas. */
 :root {
@@ -21,6 +21,15 @@
   --on-accent: #FFFFFF;
   --sim: #15241C;
   --on-sim: #EEF3EF;
+  /* Faixa de "noite de Natal": igual nos dois temas */
+  --hero: #0D3626;
+  --hero-2: #17573C;
+  --hero-fg: #FFFFFF;
+  --hero-ouro: #F2CB62;
+  --bola: #B5223B;
+  --bola-2: #E45369;
+  --luz-1: #FF5468; --luz-2: #FFD45A; --luz-3: #5DE394; --luz-4: #74B9FF;
+  --script: "Berkshire Swash", Georgia, serif;
   --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
   --body: "Atkinson Hyperlegible", Verdana, system-ui, sans-serif;
   --radius: 14px;
@@ -39,7 +48,11 @@
 }
 
 * { box-sizing: border-box; }
-body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.5; }
+body {
+  background-color: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.5;
+  background-image: radial-gradient(circle, var(--line) 1.6px, transparent 2px), radial-gradient(circle, var(--line) 1px, transparent 1.4px);
+  background-size: 52px 52px, 31px 31px; background-position: 0 0, 14px 19px;
+}
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--sim); }
 h1, h2, h3 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0; }
 p { margin: 0; }
@@ -71,24 +84,60 @@ main.largo { max-width: 760px; }
 .tela { display: flex; flex-direction: column; gap: 18px; }
 
 /* Cabeçalho da marca */
-.marca { display: flex; flex-direction: column; gap: 6px; padding-top: 6px; }
-.marca .sobre { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--berry); font-weight: 700; }
-.marca h1 { font-size: clamp(30px, 8vw, 40px); font-weight: 800; letter-spacing: -.01em; }
-.marca h1 span { color: var(--pine); }
-.fita { height: 10px; border-radius: 6px; background: repeating-linear-gradient(-45deg, var(--berry) 0 10px, var(--surface) 10px 14px, var(--pine) 14px 24px, var(--surface) 24px 28px); }
+.marca {
+  position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 4px;
+  padding: 22px 20px 18px; border-radius: 20px; color: var(--hero-fg);
+  background: radial-gradient(120% 90% at 85% 0%, var(--hero-2), var(--hero) 70%);
+}
+.marca > * { position: relative; }
+.marca .neve {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    radial-gradient(circle, color-mix(in srgb, var(--hero-fg) 90%, transparent) 1.6px, transparent 2.2px),
+    radial-gradient(circle, color-mix(in srgb, var(--hero-fg) 55%, transparent) 1px, transparent 1.6px),
+    radial-gradient(circle, color-mix(in srgb, var(--hero-fg) 75%, transparent) 2.2px, transparent 2.8px);
+  background-size: 60px 60px, 37px 37px, 96px 96px;
+  animation: neva 14s linear infinite;
+}
+@keyframes neva { to { background-position: 30px 180px, -20px 148px, 40px 192px; } }
+.marca::after {
+  content: "★"; position: absolute; top: 12px; right: 18px; font-size: 34px; line-height: 1; color: var(--hero-ouro);
+  text-shadow: 0 0 16px color-mix(in srgb, var(--hero-ouro) 70%, transparent);
+}
+.marca .sobre { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--hero-ouro); font-weight: 700; }
+.marca h1 { font-size: clamp(26px, 7vw, 34px); font-weight: 800; letter-spacing: -.01em; color: var(--hero-fg); }
+.marca h1 span { display: block; font-family: var(--script); font-weight: 400; color: var(--hero-ouro); font-size: 1.45em; line-height: 1.15; letter-spacing: 0; }
+.pisca {
+  display: flex; justify-content: space-between; margin-top: 12px; padding: 0 2px; height: 24px;
+  border-top: 2px solid color-mix(in srgb, var(--hero-fg) 30%, transparent);
+}
+.pisca i { width: 10px; height: 14px; margin-top: 1px; border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%; background: var(--c); box-shadow: 0 0 10px var(--c); animation: pisca 1.6s ease-in-out infinite; }
+.pisca i:nth-child(even) { margin-top: 5px; animation-delay: .8s; }
+.pisca i:nth-child(4n+1) { --c: var(--luz-1); }
+.pisca i:nth-child(4n+2) { --c: var(--luz-2); }
+.pisca i:nth-child(4n+3) { --c: var(--luz-3); }
+.pisca i:nth-child(4n) { --c: var(--luz-4); }
+@keyframes pisca { 50% { opacity: .35; box-shadow: none; } }
+@media (prefers-reduced-motion: reduce) { .marca .neve, .pisca i { animation: none; } }
 
 .cartao { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; gap: 14px; }
 .cartao h2 { font-size: 22px; }
 .sutil { color: var(--muted); font-size: 15px; }
 
-.contador { display: flex; align-items: center; gap: 14px; background: var(--pine-soft); border-radius: var(--radius); padding: 14px 16px; }
-.contador strong { font-family: var(--display); font-size: 40px; font-weight: 800; color: var(--pine); line-height: 1; font-variant-numeric: tabular-nums; }
+.contador { display: flex; align-items: center; gap: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 16px 14px; }
+.bola {
+  position: relative; flex: none; width: 70px; height: 70px; border-radius: 50%; display: grid; place-items: center;
+  background: radial-gradient(circle at 32% 28%, var(--bola-2), var(--bola) 62%);
+  box-shadow: inset -6px -8px 14px color-mix(in srgb, var(--hero) 35%, transparent);
+}
+.bola::before { content: ""; position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 20px; height: 10px; border-radius: 3px; background: var(--hero-ouro); }
+.bola strong { font-family: var(--display); font-size: 30px; font-weight: 800; color: var(--hero-fg); line-height: 1; font-variant-numeric: tabular-nums; }
 .contador p { font-weight: 700; }
 
 .regressiva { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
-.regressiva div { background: var(--sunk); border-radius: 10px; padding: 10px 4px; }
-.regressiva b { display: block; font-family: var(--display); font-size: 30px; font-weight: 800; color: var(--berry); font-variant-numeric: tabular-nums; line-height: 1.1; }
-.regressiva span { font-size: 13px; color: var(--muted); }
+.regressiva div { background: var(--bola); border-radius: 12px; padding: 12px 4px 10px; box-shadow: inset 0 -4px 0 color-mix(in srgb, var(--hero) 30%, transparent); }
+.regressiva b { display: block; font-family: var(--display); font-size: 32px; font-weight: 800; color: var(--hero-ouro); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.regressiva span { font-size: 13px; color: var(--hero-fg); }
 
 /* Fases */
 .fases { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
@@ -294,14 +343,14 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;'
 const dataBR = iso => iso.split('-').reverse().slice(0, 2).join('/');
 const FASES = ['Cadastro', 'Sugestões', 'Sorteio', 'Revelação'];
 const fasesHTML = () => `<ol class="fases" aria-label="Fases do amigo secreto">${FASES.map((f, i) => `<li class="${i < estado.fase ? 'feita' : i === estado.fase ? 'atual' : ''}">${f}</li>`).join('')}</ol>`;
-const marca = (sobre) => `<header class="marca"><span class="sobre">${sobre}</span><h1>Amigo Secreto dos <span>Mendoncinhas</span></h1><div class="fita" aria-hidden="true"></div></header>`;
-const contadorHTML = () => `<div class="contador"><strong>${estado.pessoas.length}</strong><p>Mendoncinhas já estão na roda do amigo secreto!</p></div>`;
+const marca = (sobre) => `<header class="marca"><div class="neve" aria-hidden="true"></div><span class="sobre">${sobre} · Natal 2026</span><h1>Amigo Secreto dos <span>Mendoncinhas</span></h1><div class="pisca" aria-hidden="true">${'<i></i>'.repeat(14)}</div></header>`;
+const contadorHTML = () => `<div class="contador"><span class="bola"><strong>${estado.pessoas.length}</strong></span><p>Mendoncinhas já estão na roda do amigo secreto!</p></div>`;
 const regrasHTML = () => `<section class="cartao"><h2>Regras</h2><ul class="regras">
   <li>Ninguém tira a si mesmo.</li>
   <li>Mantenha segredo sobre quem você tirou.</li>
   <li>Valor mínimo do presente: <b>R$ 150,00</b>.</li>
   <li>Troca de presentes na <b>véspera de Natal, 24/12</b>.</li></ul></section>`;
-const regressivaHTML = () => `<section class="cartao"><h2>Falta pouco para a troca</h2><div class="regressiva" id="regressiva"></div><p class="sutil">Contagem até a véspera de Natal, 24/12/2026.</p></section>`;
+const regressivaHTML = () => `<section class="cartao"><h2>Contagem para a véspera de Natal</h2><div class="regressiva" id="regressiva"></div><p class="sutil">Contagem até a véspera de Natal, 24/12/2026.</p></section>`;
 function atualizaRegressiva() {
   const el = $('#regressiva'); if (!el) return;
   let ms = Math.max(new Date(2026, 11, 24, 0, 0, 0) - new Date(), 0);
@@ -457,7 +506,10 @@ function telaAdmin() {
   const acaoPessoa = p => {
     if (estado.fase <= 1) return p.sugeriu ? '<span class="pill sim">Sugeriu presente</span>' : `<span class="pill nao">Sem sugestão</span><button class="btn peq claro" data-lembrar="${p.id}">Lembrar</button>`;
     if (estado.fase === 2) return `<span class="pill neutro">${[...estado.restricoes].filter(k => k.split('-').map(Number).includes(p.id)).length} restrições</span>`;
-    return `${p.enviado ? '<span class="pill sim">Enviado</span>' : '<span class="pill neutro">Não enviado</span>'}${p.comprou ? '<span class="pill sim">Comprou</span>' : `<span class="pill nao">Não comprou</span><button class="btn peq claro" data-lembrar-compra="${p.id}">Lembrar compra</button>`}<button class="btn peq" data-enviar="${p.id}">${p.enviado ? 'Reenviar' : 'Enviar'}</button>`;
+    // "Lembrar compra" só aparece depois que a pessoa recebeu o aviso de quem tirou.
+    const envio = `${p.enviado ? '<span class="pill sim">Enviado</span>' : '<span class="pill neutro">Não enviado</span>'}<button class="btn peq" data-enviar="${p.id}">${p.enviado ? 'Reenviar' : 'Enviar'}</button>`;
+    if (!p.enviado) return envio;
+    return envio + (p.comprou ? '<span class="pill sim">Comprou</span>' : `<span class="pill nao">Não comprou</span><button class="btn peq claro" data-lembrar-compra="${p.id}">Lembrar compra</button>`);
   };
   return `<div class="tela">${marca('Painel do administrador')}
     ${fasesHTML()}
@@ -493,7 +545,7 @@ function telaAdmin() {
 
     <section class="cartao"><h2>Participantes</h2>
       ${estado.fase <= 1 ? `<p class="sutil">${P.length - sugeriram} pessoas ainda não sugeriram presente.</p>` : ''}
-      ${estado.fase === 3 ? `<p class="sutil">${P.length - compraram} pessoas ainda não marcaram que compraram o presente.</p>` : ''}
+      ${estado.fase === 3 ? `<p class="sutil">Envie a mensagem de revelação para cada pessoa. Depois do envio aparece o botão "Lembrar compra" para quem ainda não marcou que comprou.</p>` : ''}
       <ul class="pessoas">${P.map(p => `<li class="pessoa">
         <div class="quem"><b>${esc(p.nome)}</b><span>${esc(p.cel)}</span>${estado.fase === 3 && estado.mostrarResultado ? `<span> · tirou ${esc(nome(tirou(p.id)))}</span>` : ''}</div>
         <div class="acoes">${acaoPessoa(p)}${estado.fase <= 2 && !sorteado ? `<button class="btn peq claro" data-restr="${p.id}" aria-expanded="${estado.abertas.has(p.id)}">Não pode tirar…</button>` : ''}</div>
