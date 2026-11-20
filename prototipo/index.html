@@ -308,6 +308,10 @@ main.largo { max-width: 760px; }
 #app:fullscreen .tv-para { font-size: 13vw; }
 #app:fullscreen .tv .btn { font-size: 24px; padding: 18px 30px; }
 #app:fullscreen .tv-roda { font-size: 22px; }
+.tv-barra { display: flex; justify-content: flex-end; }
+.tv-barra .btn { font-size: 15px; padding: 10px 14px; }
+#app:fullscreen .tv-barra { position: fixed; top: 16px; right: 16px; z-index: 2; }
+#app:fullscreen .tv-barra .btn { background: color-mix(in srgb, var(--hero-fg) 14%, transparent); color: var(--hero-fg); font-size: 15px; padding: 10px 14px; }
 @media (prefers-reduced-motion: reduce) { .tv-para.oculto { animation: none; } }
 </style>
 
@@ -712,23 +716,23 @@ function telaNatal() {
     <p class="sutil">Abra esta tela na TV na hora da troca. A família tenta adivinhar, você toca em "Revelar" e o presente é entregue. Quem recebeu é o próximo da roda.</p>
     <p class="sutil">No computador, a barra de espaço ou a seta → também avançam. Para sair da tela cheia, aperte Esc.</p>
     <p class="erro" id="aviso-tela" hidden>Este aparelho não permite tela cheia em sites; o iPhone, por exemplo, não permite. Para a TV, abra esta tela num computador ligado à TV, ou espelhe a tela do celular e deixe-o na horizontal.</p>`;
-  const botaoTela = `<button class="btn vidro" id="tela-cheia">${document.fullscreenElement ? 'Sair da tela cheia' : '⛶ Tela cheia'}</button>`;
+  const botaoTela = `<div class="tv-barra"><button class="btn claro" id="tela-cheia">${document.fullscreenElement ? 'Sair da tela cheia' : '⛶ Tela cheia'}</button></div>`;
   if (i >= n) {
-    return `<div class="tela"><section class="tv"><div class="neve" aria-hidden="true"></div>
+    return `<div class="tela">${botaoTela}<section class="tv"><div class="neve" aria-hidden="true"></div>
       <span class="sobre">Noite de Natal</span>
       <p class="tv-para">Feliz Natal!</p>
       <p class="tv-de">A roda dos Mendoncinhas</p>
       <ol class="roda tv-roda">${S.map(id => `<li>${esc(P[id].nome)}</li><li class="seta" aria-hidden="true">→</li>`).join('')}<li>${esc(P[S[0]].nome)}</li></ol>
-      <div class="btn-linha"><button class="btn ouro" id="natal-reinicia">Começar de novo</button>${botaoTela}</div>
+      <div class="btn-linha"><button class="btn ouro" id="natal-reinicia">Começar de novo</button></div>
     </section>${rodape}</div>`;
   }
-  return `<div class="tela"><section class="tv"><div class="neve" aria-hidden="true"></div>
+  return `<div class="tela">${botaoTela}<section class="tv"><div class="neve" aria-hidden="true"></div>
     <span class="sobre">Noite de Natal · ${i + 1} de ${n}</span>
     <p class="tv-de">${esc(P[S[i]].nome)} tirou…</p>
     <p class="tv-para ${estado.natalRevelado ? '' : 'oculto'}" id="tv-para">${estado.natalRevelado ? esc(P[S[(i + 1) % n]].nome) : '?'}</p>
     <div class="btn-linha">${estado.natalRevelado
       ? `<button class="btn ouro" id="natal-prox">${i + 1 === n ? 'Ver a roda completa' : 'Próximo →'}</button>`
-      : '<button class="btn ouro" id="natal-revela">Revelar</button>'}${botaoTela}</div>
+      : '<button class="btn ouro" id="natal-revela">Revelar</button>'}</div>
   </section>${rodape}</div>`;
 }
 function ligaNatal() {
