@@ -1,27 +1,28 @@
 # Requisitos — Amigo Secreto dos Mendoncinhas
 
-> **Status:** rascunho v3. Itens marcados com ❓ ainda precisam de decisão.
+> **Status:** v4. Quase fechado. Os itens marcados com ❓ ainda precisam de definição.
 
 ## 1. Objetivo
 
 Organizar o amigo secreto da família em **fases**, para manter todo mundo
 animado: cadastro → sugestão de presente → sorteio → revelação de quem cada um tirou.
+A troca de presentes será na **véspera de Natal, 24/12/2026**.
 
 ## 2. Perfis
 
 | Perfil | O que faz |
 |---|---|
-| **Administrador** | Também participa do sorteio. Acompanha as fases, define restrições, sorteia e envia mensagens. Pode ver o resultado de todos. |
-| **Participante** | Faz o cadastro, sugere um presente e vê quem tirou. |
+| **Administrador** | Também participa do sorteio. Acompanha as fases, define restrições, sorteia e envia as mensagens. Pode ver o resultado de todos. |
+| **Participante** | Faz o cadastro, sugere um presente, vê quem tirou e marca quando já comprou o presente. |
 
 ## 3. Fases
 
 | Fase | O que acontece | Quem age |
 |---|---|---|
-| **1. Cadastro** | O administrador divulga um **link de cadastro** no grupo da família. Cada pessoa informa nome e celular. | Participante |
-| **2. Sugestão de presente** | Cada participante recebe pelo WhatsApp um **link pessoal** para informar sua sugestão de presente. | Participante |
-| **3. Sorteio** | O administrador define as restrições e sorteia. | Administrador |
-| **4. Revelação** | Pelo mesmo link pessoal, cada um vê quem tirou e a sugestão de presente dessa pessoa. | Participante |
+| **1. Cadastro** | O administrador divulga o **link de cadastro** no grupo da família. Cada pessoa informa nome e celular. | Participante |
+| **2. Sugestão de presente** | Cada participante recebe pelo WhatsApp seu **link pessoal** e informa as sugestões de presente. | Participante |
+| **3. Sorteio** | O administrador define as restrições e faz o sorteio. | Administrador |
+| **4. Revelação** | No link pessoal, a caixa de presente abre e mostra quem a pessoa tirou. | Participante |
 
 O administrador abre e fecha cada fase.
 
@@ -32,8 +33,9 @@ O administrador abre e fecha cada fase.
 - **RF-02** Não aceitar celular repetido. Validar o formato: DDD + 9 dígitos.
 - **RF-03** Ao se cadastrar, o participante vê uma confirmação e as regras básicas.
 - **RF-04** O administrador pode editar, remover ou cadastrar pessoas manualmente.
-- **RF-05** Para evitar cadastros de estranhos, exigir um **código da família**
-  no cadastro, por exemplo `MENDONCA26`, informado no grupo.
+- **RF-05** O cadastro exige um **código da família**, divulgado no grupo, para
+  evitar cadastros de estranhos.
+  - ❓ Qual será o código? Sugestão: `MENDONCINHAS26`.
 - **RF-06** O cadastro só é aceito enquanto a Fase 1 estiver aberta.
 
 ## 5. Fase 2: Sugestão de presente
@@ -52,64 +54,75 @@ O administrador abre e fecha cada fase.
 
 - **RF-11** Para cada participante, o administrador marca quem ele **não pode tirar**,
   para evitar sorteio dentro do mesmo grupo familiar.
-  - ❓ A restrição vale automaticamente nos dois sentidos?
-- **RF-12** Ninguém tira a si mesmo.
-- **RF-13** **O amigo secreto não pode quebrar.** O sorteio forma uma **roda única**
-  (A→B→C→…→A). Pares fechados, como A tira B e B tira A, são proibidos.
-- **RF-14** O sorteio é aleatório e respeita todas as restrições. Se não houver
-  solução possível, o sistema avisa o administrador.
-- **RF-15** O sorteio **pode ser refeito** pelo administrador, com confirmação. Ao
-  refazer, o resultado anterior é descartado e as mensagens precisam ser reenviadas.
-- **RF-16** O administrador participa do sorteio e pode ver o resultado completo.
+- **RF-12** As restrições valem **nos dois sentidos**: se Ana não pode tirar Bruno,
+  Bruno também não pode tirar Ana. O sistema marca a restrição inversa automaticamente.
+- **RF-13** Ninguém tira a si mesmo.
+- **RF-14** **O amigo secreto não pode quebrar.** O sorteio forma uma **roda única**
+  (A→B→C→…→A), com todos os participantes. Pares fechados, como A tira B e B tira A,
+  e rodas menores são proibidos.
+- **RF-15** O sorteio é aleatório e respeita todas as restrições. Se não houver
+  solução possível, o sistema avisa o administrador e não sorteia.
+- **RF-16** O administrador pode **refazer** o sorteio, com confirmação. O resultado
+  anterior é descartado e as mensagens de revelação precisam ser reenviadas.
+- **RF-17** O administrador participa do sorteio e pode ver o resultado completo.
 
 ## 7. Fase 4: Revelação
 
-- **RF-17** O administrador libera a revelação. O sistema gera para cada participante
-  um botão "Enviar", que abre o WhatsApp com uma mensagem pronta.
-- **RF-18** No link pessoal, o participante vê **quem tirou**, as **sugestões de
-  presente** dessa pessoa e as **regras**.
-- **RF-19** O painel mostra para quem a mensagem já foi enviada.
-- **RF-20** Regras exibidas:
-  - Ninguém tira a si mesmo.
-  - Mantenha segredo sobre quem você tirou.
-  - **Valor mínimo do presente: R$ 150,00.**
-  - ❓ Data, horário e local da troca.
+- **RF-18** O administrador libera a revelação. Para cada participante, o sistema
+  mostra um botão **"Enviar"**, que abre o WhatsApp com uma mensagem pronta.
+- **RF-19** No link pessoal, aparece uma **caixa de presente animada**. Ao tocar nela,
+  a caixa se abre e revela o **nome de quem a pessoa tirou**.
+- **RF-20** Depois da revelação, o participante vê as **sugestões de presente** e os
+  tamanhos de quem tirou, além das regras.
+- **RF-21** O painel mostra para quem a mensagem de revelação já foi enviada.
 
-## 8. Requisitos não funcionais
+## 8. "Já comprei!"
+
+- **RF-22** No link pessoal, depois da revelação, o participante pode marcar
+  **"Já comprei o presente!"**.
+- **RF-23** Quem vai **receber** o presente vê no próprio link a mensagem
+  **"🎁 Seu presente já foi comprado!"**, sem revelar quem comprou.
+- **RF-24** No painel, o administrador acompanha quantos presentes já foram comprados.
+
+## 9. Contador e contagem regressiva
+
+- **RF-25** **Contador de Mendoncinhas:** a página de cadastro e o link pessoal mostram
+  quantas pessoas já se cadastraram, por exemplo "23 Mendoncinhas já estão no amigo secreto!".
+- **RF-26** **Contagem regressiva** em dias, horas e minutos até a troca de presentes
+  na véspera de Natal, visível no link pessoal.
+  - ❓ Horário e local da troca no dia 24/12/2026.
+
+## 10. Regras exibidas
+
+- Ninguém tira a si mesmo.
+- Mantenha segredo sobre quem você tirou.
+- **Valor mínimo do presente: R$ 150,00.**
+- Troca de presentes na **véspera de Natal (24/12/2026)**. ❓ Horário e local.
+
+## 11. Requisitos não funcionais
 
 - **RNF-01** Interface em português, pensada para o celular e simples para todas as idades.
 - **RNF-02** Nome: **Amigo Secreto dos Mendoncinhas**.
-- **RNF-03** O site fica hospedado no **GitHub Pages**.
-- **RNF-04** Os dados ficam em um banco gratuito externo. Veja a seção 9.
+- **RNF-03** Páginas hospedadas no **GitHub Pages**.
+- **RNF-04** Dados armazenados no **Google Planilhas**, acessado por um **Google Apps Script**
+  publicado como aplicativo web, que funciona como o servidor.
 - **RNF-05** Os nomes e celulares não ficam no repositório do GitHub.
-- **RNF-06** Testes automatizados para as regras do sorteio.
-- **RNF-07** Envio de mensagens pelo **WhatsApp**: o administrador clica e confirma
+- **RNF-06** Envio de mensagens pelo **WhatsApp**: o administrador clica e confirma
   o envio de cada mensagem.
+- **RNF-07** Testes automatizados para as regras do sorteio.
+- **RNF-08** O acesso ao painel do administrador exige uma senha de administrador.
 
-## 9. Armazenamento de dados
+## 12. Prazos sugeridos
 
-O GitHub Pages só **exibe** páginas. Ele **não grava** dados enviados pelos
-visitantes. Para o cadastro funcionar, as páginas ficam no GitHub e os dados vão
-para um serviço gratuito:
+| Fase | Período |
+|---|---|
+| Cadastro | ❓ até 30/11 |
+| Sugestão de presente | ❓ até 07/12 |
+| Sorteio e revelação | ❓ 08/12 |
+| Troca de presentes | 24/12/2026 (véspera de Natal) |
 
-| Opção | Prós | Contras |
-|---|---|---|
-| **Google Planilhas + Apps Script** (recomendado) | Gratuito. O administrador vê tudo numa planilha que já conhece. Não precisa cadastrar cartão. | Respostas um pouco mais lentas, de 1 a 2 segundos. |
-| **Firebase** | Gratuito, rápido e robusto. | Configuração mais técnica no console do Google. |
-| **Supabase** | Gratuito, com banco SQL. | O projeto gratuito é pausado após 7 dias sem uso. |
-
-## 10. Ideias para deixar mais dinâmico (escolher quais entram)
-
-- ❓ **Contador de participantes** na página inicial, por exemplo "18 Mendoncinhas já se cadastraram!".
-- ❓ **Contagem regressiva** até o dia da troca.
-- ❓ **Animação de revelação**: uma raspadinha ou caixa de presente que se abre ao mostrar o nome.
-- ❓ **Pergunta anônima ao amigo secreto**: quem tirou alguém manda uma pergunta sem se identificar,
-  por exemplo "prefere doce ou salgado?", e a pessoa responde na página dela.
-- ❓ **"Já comprei!"**: o participante marca quando comprou o presente, e o administrador acompanha no painel.
-- ❓ **Dicas para o dia da revelação**: cada um escreve 3 dicas sobre quem tirou, para usar na brincadeira da troca.
-- ❓ **Prazos por fase**, exibidos na tela. Por exemplo: "sugestões até 05/12".
-
-## 11. Fora do escopo
+## 13. Fora do escopo
 
 - SMS automático.
 - Pagamentos e vaquinhas.
+- Perguntas anônimas e dicas sobre o amigo secreto.
