@@ -34,18 +34,8 @@
   --body: "Atkinson Hyperlegible", Verdana, system-ui, sans-serif;
   --radius: 14px;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0E1813; --surface: #16231C; --sunk: #1D2D25; --ink: #E6EFE9; --muted: #97ADA1; --line: #2B3E34;
-    --pine: #5DB38D; --pine-soft: #1F3A2D; --berry: #E8607A; --berry-soft: #3D1C24; --gold: #E3B654; --gold-soft: #3A3018;
-    --on-accent: #0E1813; --sim: #E6EFE9; --on-sim: #0E1813; color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0E1813; --surface: #16231C; --sunk: #1D2D25; --ink: #E6EFE9; --muted: #97ADA1; --line: #2B3E34;
-  --pine: #5DB38D; --pine-soft: #1F3A2D; --berry: #E8607A; --berry-soft: #3D1C24; --gold: #E3B654; --gold-soft: #3A3018;
-  --on-accent: #0E1813; --sim: #E6EFE9; --on-sim: #0E1813; color-scheme: dark;
-}
+/* Sempre no modo claro, mesmo com o celular no modo escuro. */
+:root, :root[data-theme="dark"] { color-scheme: light; }
 
 * { box-sizing: border-box; }
 body {

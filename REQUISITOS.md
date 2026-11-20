@@ -104,6 +104,7 @@ O administrador abre e fecha cada fase.
 ## 11. Requisitos não funcionais
 
 - **RNF-01** Interface em português, pensada para o celular e simples para todas as idades.
+- **RNF-01a** O site aparece sempre no modo claro, mesmo com o celular no modo escuro.
 - **RNF-02** Nome: **Amigo Secreto dos Mendoncinhas**.
 - **RNF-03** Páginas hospedadas no **GitHub Pages**.
 - **RNF-04** Dados armazenados no **Google Planilhas**, acessado por um **Google Apps Script**
