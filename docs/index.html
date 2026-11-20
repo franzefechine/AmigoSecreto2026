@@ -33,7 +33,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
-<link rel="stylesheet" href="estilo.css">
+<!-- O número de versão muda a cada minuto, para o navegador não usar estilo/código antigo guardado. -->
+<script>window.VERSAO = Math.floor(Date.now() / 60000); document.write('<link rel="stylesheet" href="estilo.css?v=' + window.VERSAO + '">');</script>
+<noscript><link rel="stylesheet" href="estilo.css"></noscript>
 </head>
 <body>
 <main id="app" aria-live="polite">
@@ -45,7 +47,9 @@
 <div id="modal"></div>
 <div id="aviso-flutuante" role="status" hidden></div>
 <noscript><p style="padding:16px">Para usar o amigo secreto, ative o JavaScript do navegador.</p></noscript>
-<script src="config.js"></script>
-<script src="app.js"></script>
+<script>
+  document.write('<script src="config.js?v=' + window.VERSAO + '"><\/script>');
+  document.write('<script src="app.js?v=' + window.VERSAO + '"><\/script>');
+</script>
 </body>
 </html>
