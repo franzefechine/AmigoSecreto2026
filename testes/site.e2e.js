@@ -17,7 +17,7 @@ const PASTA_FOTOS = process.env.FOTOS || '';
   const navegador = await chromium.launch();
   const contexto = await navegador.newContext({ viewport: { width: 390, height: 844 } });
   const whatsapp = [];
-  await contexto.route('https://wa.me/**', r => r.fulfill({ status: 200, body: 'whatsapp' }));
+  await contexto.route('https://api.whatsapp.com/**', r => r.fulfill({ status: 200, body: 'whatsapp' }));
   await contexto.route(API, async rota => {
     const dados = JSON.parse(rota.request().postData() || '{}');
     await rota.fulfill({ status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(servidor.pedir(dados)) });
@@ -64,7 +64,11 @@ const PASTA_FOTOS = process.env.FOTOS || '';
   await pagina.locator('[data-enviar-link]').first().click();
   await pagina.waitForFunction(() => document.querySelector('.pessoa .status').textContent.includes('Link enviado'));
   await pagina.waitForTimeout(300);
-  assert.ok(whatsapp.some(u => u.startsWith('https://wa.me/5531991000000?text=')), 'abriu o WhatsApp da Vó');
+  const msg = whatsapp.find(u => u.startsWith('https://api.whatsapp.com/send?phone=5531991000000&text='));
+  assert.ok(msg, 'abriu o WhatsApp da Vó');
+  const texto = new URL(msg).searchParams.get('text');
+  assert.ok(texto.includes('Oi, *Vó Lurdes*! 👋🎄') && texto.includes('👉 ') && !texto.includes('\uFFFD'), 'emojis e negrito intactos');
+  console.log('\n--- mensagem do link ---\n' + texto + '\n---');
   await foto('2-painel-cadastro');
   passo('login do administrador e envio do link pessoal');
 

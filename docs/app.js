@@ -152,8 +152,8 @@ function confete(x, y) {
 }
 
 function abrirWhatsApp(celular, texto) {
-  const destino = celular ? '55' + celular : '';
-  const url = `https://wa.me/${destino}?text=${encodeURIComponent(texto)}`;
+  // api.whatsapp.com em vez de wa.me: o redirecionamento do wa.me estraga alguns emojis (aparecem como �).
+  const url = 'https://api.whatsapp.com/send?' + (celular ? 'phone=55' + celular + '&' : '') + 'text=' + encodeURIComponent(texto);
   // Sem "noopener" aqui: com ele o navegador sempre devolve null e não daria para saber se abriu.
   const janela = window.open(url, '_blank');
   if (janela) janela.opener = null;
@@ -417,16 +417,73 @@ async function adm(botao, acao, dados = {}, sucesso) {
   });
 }
 
+// Mensagens do WhatsApp. Formatação do WhatsApp: *negrito* e _itálico_.
+const diasAte = iso => {
+  const [a, m, d] = iso.split('-').map(Number);
+  return Math.max(Math.ceil((new Date(a, m - 1, d) - new Date()) / 864e5), 0);
+};
 const mensagens = {
-  link: p => `Oi, ${p.nome}! 🎄 Este é o seu link pessoal do Amigo Secreto dos Mendoncinhas:\n\n${linkPessoal(p.token)}\n\nPor ele você sugere o presente que gostaria de ganhar (até ${dataBR(E.admin.prazos.sugestao)}) e, depois do sorteio, descobre quem tirou. Guarde esta mensagem!`,
-  lembrarSugestao: p => `Oi, ${p.nome}! 🎄 Ainda falta você sugerir seu presente no Amigo Secreto dos Mendoncinhas. O prazo vai até ${dataBR(E.admin.prazos.sugestao)}.\n\nÉ só abrir seu link: ${linkPessoal(p.token)}`,
-  revelacao: p => `Oi, ${p.nome}! 🎁 O sorteio do Amigo Secreto dos Mendoncinhas foi feito!\n\nAbra seu link e toque no presente para descobrir quem você tirou: ${linkPessoal(p.token)}\n\nLembre: presente de no mínimo ${reais(E.admin.valorMinimo)}, troca na véspera de Natal. E bico calado! 🤫`,
+  convite: () => [
+    '🎄✨ *Amigo Secreto dos Mendoncinhas* ✨🎄',
+    '_Natal 2026_',
+    '',
+    'Chegou a hora de entrar na roda! 🎁',
+    '',
+    `📝 Faça seu cadastro até *${dataBR(E.admin.prazos.cadastro)}*:`,
+    `👉 ${BASE}`,
+    '',
+    `💰 Presente de no mínimo *${reais(E.admin.valorMinimo)}*`,
+    `📅 Troca de presentes na *véspera de Natal (${dataBR(E.admin.prazos.troca)})*`,
+    '',
+    'Contamos com você! ❤️',
+  ].join('\n'),
+  link: p => [
+    `Oi, *${p.nome}*! 👋🎄`,
+    '',
+    'Este é o seu *link pessoal* do *Amigo Secreto dos Mendoncinhas*:',
+    `👉 ${linkPessoal(p.token)}`,
+    '',
+    'Por ele você vai:',
+    `🎁 sugerir o presente que gostaria de ganhar (até *${dataBR(E.admin.prazos.sugestao)}*)`,
+    '🔍 descobrir quem você tirou, depois do sorteio',
+    '',
+    '📌 _Guarde esta mensagem! O link é só seu, não compartilhe._',
+  ].join('\n'),
+  lembrarSugestao: p => [
+    `Oi, *${p.nome}*! 🎄`,
+    '',
+    'Ainda falta você *sugerir seu presente* no Amigo Secreto dos Mendoncinhas. 🎁',
+    `⏰ O prazo vai até *${dataBR(E.admin.prazos.sugestao)}*.`,
+    '',
+    'É rapidinho, é só abrir seu link:',
+    `👉 ${linkPessoal(p.token)}`,
+  ].join('\n'),
+  revelacao: p => [
+    `Oi, *${p.nome}*! 🎉`,
+    '',
+    'O *sorteio* do Amigo Secreto dos Mendoncinhas foi feito! 🎄',
+    '',
+    'Abra seu link e toque no presente para descobrir quem você tirou: 🎁',
+    `👉 ${linkPessoal(p.token)}`,
+    '',
+    `💰 Presente de no mínimo *${reais(E.admin.valorMinimo)}*`,
+    `📅 Troca na *véspera de Natal (${dataBR(E.admin.prazos.troca)})*`,
+    '🤫 _E bico calado: é segredo!_',
+  ].join('\n'),
   lembrarCompra: p => {
-    const [a, m, d] = E.admin.prazos.troca.split('-').map(Number);
-    const dias = Math.max(Math.ceil((new Date(a, m - 1, d) - new Date()) / 864e5), 0);
-    return `Oi, ${p.nome}! 🎁 Já comprou o presente do seu amigo secreto?\n\nQuando comprar, abra seu link e toque em "Já comprei o presente!". Assim quem você tirou fica sabendo que o presente está garantido (sem saber que foi você).\n\nFaltam ${dias} dias para a véspera de Natal!\n\nSeu link: ${linkPessoal(p.token)}`;
+    const dias = diasAte(E.admin.prazos.troca);
+    return [
+      `Oi, *${p.nome}*! 🛍️`,
+      '',
+      'Já comprou o presente do seu amigo secreto? 🎁',
+      '',
+      'Quando comprar, abra seu link e toque em *"Já comprei o presente!"* ✅',
+      'Assim quem você tirou fica sabendo que o presente está garantido _(sem saber que foi você)_. 😉',
+      '',
+      dias > 0 ? `⏳ ${dias === 1 ? '*Falta 1 dia*' : `*Faltam ${dias} dias*`} para a véspera de Natal!` : '🎄 *É hoje a troca de presentes!*',
+      `👉 ${linkPessoal(p.token)}`,
+    ].join('\n');
   },
-  convite: () => `🎄 Amigo Secreto dos Mendoncinhas — Natal 2026!\n\nCadastre-se até ${dataBR(E.admin.prazos.cadastro)} neste link:\n${BASE}\n\nPresente de no mínimo ${reais(E.admin.valorMinimo)}. Troca na véspera de Natal!`,
 };
 
 function telaAdmin() {
