@@ -101,6 +101,23 @@ O administrador abre e fecha cada fase.
 - **Valor mínimo do presente: R$ 150,00.**
 - Troca de presentes na **véspera de Natal (24/12/2026)**.
 
+## 10a. Extras
+
+- **RF-29** **Prévia do link no WhatsApp.** Todo link do site mostra no WhatsApp um cartão
+  com imagem natalina, o título "Amigo Secreto dos Mendoncinhas" e uma frase convidativa.
+  O site usa as meta tags Open Graph e uma imagem de 1200×630.
+- **RF-30** **Confete na revelação.** Ao abrir a caixa de presente, confetes coloridos
+  explodem na tela. Não aparecem para quem ativou "reduzir movimento" no celular.
+- **RF-31** **Adicionar à tela inicial.** O site pode ser instalado como um ícone no celular.
+  - No Android, o botão instala direto.
+  - No iPhone, o botão mostra o passo a passo do Safari.
+  - O ícone abre o link pessoal da pessoa.
+- **RF-32** **Revelação da noite de Natal.** Na fase de revelação, o administrador abre
+  uma tela para a TV que mostra a roda pessoa por pessoa:
+  - aparece "Fulano tirou…" e o nome fica escondido até o administrador tocar em "Revelar", com confete;
+  - quem recebeu o presente é o próximo da roda;
+  - no final aparece "Feliz Natal!" com a roda completa.
+
 ## 11. Requisitos não funcionais
 
 - **RNF-01** Interface em português, pensada para o celular e simples para todas as idades.

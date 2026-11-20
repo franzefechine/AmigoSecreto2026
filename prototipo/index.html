@@ -80,7 +80,7 @@ main.largo { max-width: 760px; }
   background: radial-gradient(120% 90% at 85% 0%, var(--hero-2), var(--hero) 70%);
 }
 .marca > * { position: relative; }
-.marca .neve {
+.marca .neve, .tv .neve {
   position: absolute; inset: 0; pointer-events: none;
   background-image:
     radial-gradient(circle, color-mix(in srgb, var(--hero-fg) 90%, transparent) 1.6px, transparent 2.2px),
@@ -108,7 +108,7 @@ main.largo { max-width: 760px; }
 .pisca i:nth-child(4n+3) { --c: var(--luz-3); }
 .pisca i:nth-child(4n) { --c: var(--luz-4); }
 @keyframes pisca { 50% { opacity: .35; box-shadow: none; } }
-@media (prefers-reduced-motion: reduce) { .marca .neve, .pisca i { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .marca .neve, .tv .neve, .pisca i { animation: none; } }
 
 .cartao { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; gap: 14px; }
 .cartao h2 { font-size: 22px; }
@@ -236,9 +236,58 @@ main.largo { max-width: 760px; }
 .confirma { background: var(--berry-soft); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
 
 .modal-fundo { position: fixed; inset: 0; background: color-mix(in srgb, var(--ink) 55%, transparent); display: flex; align-items: flex-end; justify-content: center; z-index: 20; padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
-.modal { background: var(--surface); border-radius: 18px; padding: 20px; max-width: 460px; width: 100%; display: flex; flex-direction: column; gap: 12px; }
-.bolha { background: #DCF8C6; color: #111B21; border-radius: 12px 12px 12px 2px; padding: 12px 14px; white-space: pre-wrap; font-size: 15px; }
+.modal { background: var(--surface); border-radius: 18px; padding: 20px; max-width: 460px; width: 100%; max-height: 100%; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+.bolha { background: #DCF8C6; color: #111B21; border-radius: 12px 12px 12px 2px; padding: 6px 6px 12px; font-size: 15px; display: flex; flex-direction: column; gap: 10px; }
+.bolha .txt { white-space: pre-wrap; padding: 0 8px; }
 .etiqueta-sim { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--gold); font-weight: 700; }
+
+/* Prévia do link no WhatsApp */
+.previa { background: #CDE9B5; border-radius: 8px; overflow: hidden; }
+.previa-img {
+  position: relative; aspect-ratio: 1.91 / 1; max-width: 100%; padding: 14px 16px; display: flex; flex-direction: column; justify-content: center;
+  color: var(--hero-fg); background: radial-gradient(120% 90% at 85% 0%, var(--hero-2), var(--hero) 70%);
+}
+.previa-img b { font-family: var(--display); font-size: 17px; }
+.previa-img em { font-family: var(--script); font-style: normal; color: var(--hero-ouro); font-size: 30px; line-height: 1.1; }
+.previa-img span { position: absolute; top: 10px; right: 14px; color: var(--hero-ouro); font-size: 24px; }
+.previa-txt { padding: 8px 10px; display: flex; flex-direction: column; gap: 2px; font-size: 13px; line-height: 1.35; }
+.previa-txt span, .previa-txt small { color: #54656F; }
+
+/* Tela inicial do celular */
+.instalar { flex-direction: row; flex-wrap: wrap; align-items: center; }
+.instalar-txt { flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.instalar .btn { flex: 1 1 100%; }
+.instalar-topo { display: flex; gap: 14px; align-items: center; }
+.icone {
+  flex: none; width: 60px; height: 60px; border-radius: 15px; display: grid; place-items: center; font-size: 30px; color: var(--hero-ouro);
+  background: radial-gradient(120% 90% at 85% 0%, var(--hero-2), var(--hero) 70%);
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--hero) 30%, transparent);
+}
+.passos { margin: 4px 0 0; padding-left: 22px; display: flex; flex-direction: column; gap: 4px; }
+
+/* Confete da revelação */
+.confete { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 30; }
+
+/* Noite de Natal (tela para a TV) */
+.tv {
+  position: relative; overflow: hidden; border-radius: 24px; padding: 44px 24px 36px; text-align: center; color: var(--hero-fg);
+  background: radial-gradient(120% 90% at 50% 0%, var(--hero-2), var(--hero) 70%);
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
+.tv > * { position: relative; }
+.tv .sobre { font-size: 14px; letter-spacing: .12em; text-transform: uppercase; color: var(--hero-ouro); font-weight: 700; }
+.tv-de { font-family: var(--display); font-weight: 800; font-size: clamp(26px, 6vw, 46px); line-height: 1.15; }
+.tv-para {
+  font-family: var(--script); color: var(--hero-ouro); font-size: clamp(48px, 13vw, 104px); line-height: 1.1;
+  text-shadow: 0 0 24px color-mix(in srgb, var(--hero-ouro) 50%, transparent);
+}
+.tv-para.oculto { opacity: .45; animation: suspense 1.2s ease-in-out infinite; }
+@keyframes suspense { 50% { transform: scale(1.12); } }
+.tv-roda { justify-content: center; }
+.tv-roda li { background: color-mix(in srgb, var(--hero-fg) 14%, transparent); color: var(--hero-fg); }
+.tv-roda li.seta { background: none; color: var(--hero-ouro); }
+.btn.ouro { background: var(--hero-ouro); color: var(--hero); }
+@media (prefers-reduced-motion: reduce) { .tv-para.oculto { animation: none; } }
 </style>
 
 <div class="sim">
@@ -249,6 +298,7 @@ main.largo { max-width: 760px; }
       <a href="#sugestao">Sugestões</a>
       <a href="#revelacao">Revelação</a>
       <a href="#admin">Administrador</a>
+      <a href="#natal">Noite de Natal</a>
     </nav>
   </div>
 </div>
@@ -287,6 +337,9 @@ const estado = {
   sugestoesSalvas: false,
   caixaAberta: false,
   euComprei: false,
+  natalPasso: 0,
+  natalRevelado: false,
+  natalAuto: false,
 };
 const chave = (a, b) => a < b ? a + '-' + b : b + '-' + a;
 // Restrições iniciais: mesmo grupo familiar, nos dois sentidos.
@@ -354,15 +407,53 @@ function mascaraCel(v) {
   if (d.length <= 7) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
   return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
 }
-function whatsapp(pessoa, texto) {
+function abrirModal(titulo, corpo) {
   $('#modal').innerHTML = `<div class="modal-fundo" id="fundo"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
-    <span class="etiqueta-sim">Simulação</span>
-    <h2 id="mt">Mensagem para ${esc(pessoa.nome)}</h2>
-    <p class="sutil">No site de verdade, este botão abre o WhatsApp com a mensagem pronta para ${esc(pessoa.cel)}. Aqui só mostramos como ela fica.</p>
-    <div class="bolha">${esc(texto)}</div>
+    <h2 id="mt">${titulo}</h2>${corpo}
     <button class="btn" id="fecha">Fechar</button></div></div>`;
   $('#fecha').onclick = fecharModal; $('#fundo').onclick = e => { if (e.target.id === 'fundo') fecharModal(); };
   $('#fecha').focus();
+}
+function whatsapp(pessoa, texto) {
+  abrirModal(`Mensagem para ${esc(pessoa.nome)}`, `<span class="etiqueta-sim">Simulação</span>
+    <p class="sutil">No site de verdade, este botão abre o WhatsApp com a mensagem pronta para ${esc(pessoa.cel)}. Aqui só mostramos como ela fica.</p>
+    <div class="bolha">
+      <div class="previa">
+        <div class="previa-img"><span aria-hidden="true">★</span><b>Amigo Secreto dos</b><em>Mendoncinhas</em></div>
+        <div class="previa-txt"><b>Amigo Secreto dos Mendoncinhas 🎄</b><span>Natal 2026 · Toque para abrir seu link pessoal</span><small>mendoncinhas.github.io</small></div>
+      </div>
+      <div class="txt">${esc(texto)}</div>
+    </div>`);
+}
+function mostrarInstalar() {
+  abrirModal('Adicionar à tela inicial', `<div class="instalar-topo"><span class="icone" aria-hidden="true">★</span>
+      <p>O ícone <b>Mendoncinhas</b> fica junto com seus aplicativos e abre direto o seu link pessoal.</p></div>
+    <div><b>No iPhone</b><ol class="passos"><li>Abra o link no Safari.</li><li>Toque em Compartilhar (o quadrado com a seta para cima).</li><li>Escolha "Adicionar à Tela de Início".</li></ol></div>
+    <div><b>No Android</b><ol class="passos"><li>Abra o link no Chrome.</li><li>Toque nos três pontinhos ⋮ no canto.</li><li>Escolha "Adicionar à tela inicial".</li></ol></div>
+    <p class="sutil">No site de verdade, no Android, o botão já adiciona o ícone direto.</p>`);
+}
+const instalarHTML = () => `<section class="cartao instalar"><span class="icone" aria-hidden="true">★</span>
+  <div class="instalar-txt"><h2>Tenha no seu celular</h2><p class="sutil">Coloque um ícone na tela inicial e abra seu link sem procurar no WhatsApp.</p></div>
+  <button class="btn claro" id="instalar">Adicionar à tela inicial</button></section>`;
+function confete(x, y) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const c = document.createElement('canvas'); c.className = 'confete'; document.body.appendChild(c);
+  const dpr = devicePixelRatio || 1, W = innerWidth, H = innerHeight;
+  c.width = W * dpr; c.height = H * dpr; const g = c.getContext('2d'); g.scale(dpr, dpr);
+  const cores = ['#F2CB62', '#B5223B', '#17573C', '#E45369', '#74B9FF'];
+  const ps = Array.from({ length: 150 }, () => ({ x, y, vx: (Math.random() - .5) * 10, vy: -Math.random() * 12 - 4, r: Math.random() * 4 + 2,
+    cor: cores[Math.random() * cores.length | 0], rot: Math.random() * 6, vr: (Math.random() - .5) * .3, bola: Math.random() < .35 }));
+  let t = 0;
+  (function passo() {
+    g.clearRect(0, 0, W, H);
+    ps.forEach(p => {
+      p.vy += .28; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      g.save(); g.translate(p.x, p.y); g.rotate(p.rot); g.fillStyle = p.cor;
+      if (p.bola) { g.beginPath(); g.arc(0, 0, p.r, 0, 7); g.fill(); } else g.fillRect(-p.r, -p.r / 2, p.r * 2, p.r);
+      g.restore();
+    });
+    if (++t < 160) requestAnimationFrame(passo); else c.remove();
+  })();
 }
 function fecharModal() { $('#modal').innerHTML = ''; }
 const linkPessoal = p => `https://mendoncinhas.github.io/amigo-secreto/#p-${(p.id * 7919 + 4243).toString(36)}x9k`;
@@ -426,7 +517,7 @@ function telaSugestao() {
       ${estado.sugestoesSalvas ? '<div class="aviso ok" role="status">✓ Sugestões salvas</div>' : ''}
       <button class="btn" type="submit">Salvar sugestões</button>
     </form>
-    ${regressivaHTML()}${regrasHTML()}</div>`;
+    ${instalarHTML()}${regressivaHTML()}${regrasHTML()}</div>`;
 }
 function ligaSugestao() {
   $('#form-sug').onsubmit = e => {
@@ -466,7 +557,7 @@ function telaRevelacao() {
         </section>
       </div>
     </div>
-    ${regressivaHTML()}${regrasHTML()}</div>`;
+    ${instalarHTML()}${regressivaHTML()}${regrasHTML()}</div>`;
 }
 function ligaRevelacao() {
   $('#caixa').onclick = () => {
@@ -475,7 +566,9 @@ function ligaRevelacao() {
     $('#caixa').classList.add('aberta');
     $('#caixa').setAttribute('aria-label', 'Você tirou Tio Jorge');
     $('#dica').textContent = 'Shhh… é segredo!';
-    setTimeout(() => { $('#depois').hidden = false; }, 900);
+    const r = $('#caixa').getBoundingClientRect();
+    setTimeout(() => confete(r.left + r.width / 2, r.top + 30), 450);
+    setTimeout(() => { const d = $('#depois'); if (d) d.hidden = false; }, 900);
   };
   const c = $('#comprei'); if (c) c.onclick = () => { estado.euComprei = !estado.euComprei; estado.pessoas[estado.euId].comprou = estado.euComprei; render(); };
 }
@@ -533,6 +626,10 @@ function telaAdmin() {
         <button class="btn berry" id="sortear">Fazer o sorteio</button>`}
     </section>` : ''}
 
+    ${estado.fase === 3 ? `<section class="cartao"><h2>Noite de Natal</h2>
+      <p class="sutil">Na hora da troca de presentes, abra a revelação geral na TV. A roda aparece pessoa por pessoa.</p>
+      <a class="btn berry" href="#natal">Abrir revelação da noite de Natal</a></section>` : ''}
+
     <section class="cartao"><h2>Participantes</h2>
       ${estado.fase <= 1 ? `<p class="sutil">${P.length - sugeriram} pessoas ainda não sugeriram presente.</p>` : ''}
       ${estado.fase === 3 ? `<p class="sutil">Envie a mensagem de revelação para cada pessoa. Depois do envio aparece o botão "Lembrar compra" para quem ainda não marcou que comprou.</p>` : ''}
@@ -577,15 +674,46 @@ function ligaAdmin() {
   });
 }
 
-const TELAS = { cadastro: [telaCadastro, ligaCadastro], sugestao: [telaSugestao, ligaSugestao], revelacao: [telaRevelacao, ligaRevelacao], admin: [telaAdmin, ligaAdmin] };
+function telaNatal() {
+  if (!estado.sorteio) { estado.sorteio = sortear(estado.pessoas, estado.restricoes); estado.natalAuto = true; }
+  const S = estado.sorteio, n = S.length, i = estado.natalPasso, P = estado.pessoas;
+  const rodape = `${estado.natalAuto ? '<p class="sutil">Na simulação, o sorteio foi feito agora só para mostrar esta tela.</p>' : ''}
+    <p class="sutil">Abra esta tela na TV na hora da troca. A família tenta adivinhar, você toca em "Revelar" e o presente é entregue. Quem recebeu é o próximo da roda.</p>`;
+  if (i >= n) {
+    return `<div class="tela"><section class="tv"><div class="neve" aria-hidden="true"></div>
+      <span class="sobre">Noite de Natal</span>
+      <p class="tv-para">Feliz Natal!</p>
+      <p class="tv-de">A roda dos Mendoncinhas</p>
+      <ol class="roda tv-roda">${S.map(id => `<li>${esc(P[id].nome)}</li><li class="seta" aria-hidden="true">→</li>`).join('')}<li>${esc(P[S[0]].nome)}</li></ol>
+      <div class="btn-linha"><button class="btn ouro" id="natal-reinicia">Começar de novo</button></div>
+    </section>${rodape}</div>`;
+  }
+  return `<div class="tela"><section class="tv"><div class="neve" aria-hidden="true"></div>
+    <span class="sobre">Noite de Natal · ${i + 1} de ${n}</span>
+    <p class="tv-de">${esc(P[S[i]].nome)} tirou…</p>
+    <p class="tv-para ${estado.natalRevelado ? '' : 'oculto'}" id="tv-para">${estado.natalRevelado ? esc(P[S[(i + 1) % n]].nome) : '?'}</p>
+    <div class="btn-linha">${estado.natalRevelado
+      ? `<button class="btn ouro" id="natal-prox">${i + 1 === n ? 'Ver a roda completa' : 'Próximo →'}</button>`
+      : '<button class="btn ouro" id="natal-revela">Revelar</button>'}</div>
+  </section>${rodape}</div>`;
+}
+function ligaNatal() {
+  const rv = $('#natal-revela');
+  if (rv) rv.onclick = () => { estado.natalRevelado = true; render(); const r = $('#tv-para').getBoundingClientRect(); confete(r.left + r.width / 2, r.top + r.height / 2); };
+  const px = $('#natal-prox'); if (px) px.onclick = () => { estado.natalPasso++; estado.natalRevelado = false; render(); };
+  const ri = $('#natal-reinicia'); if (ri) ri.onclick = () => { estado.natalPasso = 0; estado.natalRevelado = false; render(); };
+}
+
+const TELAS = { cadastro: [telaCadastro, ligaCadastro], sugestao: [telaSugestao, ligaSugestao], revelacao: [telaRevelacao, ligaRevelacao], admin: [telaAdmin, ligaAdmin], natal: [telaNatal, ligaNatal] };
 function rota() { const h = location.hash.slice(1); return TELAS[h] ? h : 'cadastro'; }
 function render() {
   const r = rota();
   const app = $('#app');
   const foco = document.activeElement && document.activeElement.id;
-  app.className = r === 'admin' ? 'largo' : '';
+  app.className = r === 'admin' || r === 'natal' ? 'largo' : '';
   app.innerHTML = TELAS[r][0]();
   TELAS[r][1]();
+  const ins = $('#instalar'); if (ins) ins.onclick = mostrarInstalar;
   document.querySelectorAll('.sim nav a').forEach(a => a.setAttribute('aria-current', a.getAttribute('href') === '#' + r ? 'page' : 'false'));
   atualizaRegressiva();
   if (foco && document.getElementById(foco)) document.getElementById(foco).focus({ preventScroll: true });
