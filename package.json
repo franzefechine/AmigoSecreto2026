@@ -1,0 +1,9 @@
+{
+  "name": "amigo-secreto-mendoncinhas",
+  "private": true,
+  "description": "Amigo Secreto dos Mendoncinhas — Natal 2026",
+  "scripts": {
+    "test": "node --test testes/*.test.js",
+    "e2e": "node testes/site.e2e.js"
+  }
+}

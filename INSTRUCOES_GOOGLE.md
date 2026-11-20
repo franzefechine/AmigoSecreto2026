@@ -82,6 +82,19 @@ Cole a URL no navegador. Deve aparecer algo assim:
 
 ---
 
+## Passo 8: Publicar o site no GitHub Pages
+
+Faça uma vez só. O repositório precisa estar **público**.
+
+1. No GitHub, abra o repositório **AmigoSecreto2026** e clique em **Settings**.
+2. No menu da esquerda, clique em **Pages**.
+3. Em **Build and deployment → Source**, escolha **Deploy from a branch**.
+4. Em **Branch**, escolha o ramo onde está o site e a pasta **/docs**, e clique em **Save**.
+   - Por enquanto o site está no ramo `claude/blissful-ptolemy-syz8rf`.
+   - Depois que esse trabalho for juntado ao `main`, troque para `main` e `/docs`.
+5. Espere 1 ou 2 minutos e recarregue a página. Aparece o endereço do site:
+   `https://franzefechine.github.io/AmigoSecreto2026/`
+
 ## Quando o código for atualizado
 
 Nas próximas etapas eu vou mandar versões novas do `Codigo.gs`. Para atualizar
