@@ -116,6 +116,8 @@ O administrador abre e fecha cada fase.
   uma tela para a TV que mostra a roda pessoa por pessoa:
   - primeiro a tela pergunta **quem vai começar**: o administrador toca no nome ou em
     "Sortear quem começa", que faz uma roleta entre os nomes;
+  - o botão **"Começar de novo"** fica fora do quadro, ao lado de "Tela cheia", e funciona a qualquer
+    momento, sem revelar o resto da roda. Ele pede um segundo toque de confirmação;
   - aparece "Fulano tirou…" e o nome fica escondido até o administrador tocar em "Revelar", com confete;
   - quem recebeu o presente é o próximo da roda;
   - no final aparece "Feliz Natal!" com a roda completa.

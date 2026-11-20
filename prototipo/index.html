@@ -314,7 +314,7 @@ main.largo { max-width: 760px; }
 .tv-escolha .btn:hover:not(:disabled), .tv-escolha .btn.destaque { background: var(--hero-ouro); color: var(--hero); }
 #app:fullscreen .tv-escolha { max-width: 80vw; gap: 12px; }
 #app:fullscreen .tv-escolha .btn { font-size: 22px; padding: 14px 20px; }
-.tv-barra { display: flex; justify-content: flex-end; }
+.tv-barra { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
 .tv-barra .btn { font-size: 15px; padding: 10px 14px; }
 #app:fullscreen .tv-barra { position: fixed; top: 16px; right: 16px; z-index: 2; }
 #app:fullscreen .tv-barra .btn { background: color-mix(in srgb, var(--hero-fg) 14%, transparent); color: var(--hero-fg); font-size: 15px; padding: 10px 14px; }
@@ -727,7 +727,7 @@ function telaNatal() {
     <p class="sutil">Abra esta tela na TV na hora da troca. A família tenta adivinhar, você toca em "Revelar" e o presente é entregue. Quem recebeu é o próximo da roda.</p>
     <p class="sutil">No computador, a barra de espaço ou a seta → também avançam. Para sair da tela cheia, aperte Esc.</p>
     <p class="erro" id="aviso-tela" hidden>Este aparelho não permite tela cheia em sites; o iPhone, por exemplo, não permite. Para a TV, abra esta tela num computador ligado à TV, ou espelhe a tela do celular e deixe-o na horizontal.</p>`;
-  const botaoTela = `<div class="tv-barra"><button class="btn claro" id="tela-cheia">${document.fullscreenElement ? 'Sair da tela cheia' : '⛶ Tela cheia'}</button></div>`;
+  const botaoTela = `<div class="tv-barra">${estado.natalInicio !== null ? '<button class="btn claro" id="natal-recomeca">↺ Começar de novo</button>' : ''}<button class="btn claro" id="tela-cheia">${document.fullscreenElement ? 'Sair da tela cheia' : '⛶ Tela cheia'}</button></div>`;
   if (estado.natalInicio === null) {
     const porNome = S.slice().sort((a, b) => P[a].nome.localeCompare(P[b].nome, 'pt-BR'));
     return `<div class="tela">${botaoTela}<section class="tv"><div class="neve" aria-hidden="true"></div>
@@ -743,7 +743,6 @@ function telaNatal() {
       <p class="tv-para">Feliz Natal!</p>
       <p class="tv-de">A roda dos Mendoncinhas</p>
       <ol class="roda tv-roda">${S.map(id => `<li>${esc(P[id].nome)}</li><li class="seta" aria-hidden="true">→</li>`).join('')}<li>${esc(P[S[0]].nome)}</li></ol>
-      <div class="btn-linha"><button class="btn ouro" id="natal-reinicia">Começar de novo</button></div>
     </section>${rodape}</div>`;
   }
   return `<div class="tela">${botaoTela}<section class="tv"><div class="neve" aria-hidden="true"></div>
@@ -759,7 +758,16 @@ function ligaNatal() {
   const rv = $('#natal-revela');
   if (rv) rv.onclick = () => { estado.natalRevelado = true; render(); const r = $('#tv-para').getBoundingClientRect(); confete(r.left + r.width / 2, r.top + r.height / 2); };
   const px = $('#natal-prox'); if (px) px.onclick = () => { estado.natalPasso++; estado.natalRevelado = false; render(); };
-  const ri = $('#natal-reinicia'); if (ri) ri.onclick = () => { estado.natalPasso = 0; estado.natalRevelado = false; estado.natalInicio = null; render(); };
+  // Recomeçar fica fora do quadro e pede um segundo toque, para não recomeçar sem querer.
+  const ri = $('#natal-recomeca');
+  if (ri) ri.onclick = () => {
+    if (!ri.dataset.confirmar) {
+      ri.dataset.confirmar = '1'; ri.textContent = 'Toque de novo para recomeçar';
+      setTimeout(() => { if (ri.isConnected) { delete ri.dataset.confirmar; ri.textContent = '↺ Começar de novo'; } }, 3000);
+      return;
+    }
+    estado.natalPasso = 0; estado.natalRevelado = false; estado.natalInicio = null; render();
+  };
   const escolher = id => { estado.natalInicio = id; estado.natalPasso = 0; estado.natalRevelado = false; render(); };
   const opcoes = [...document.querySelectorAll('[data-comeca]')];
   opcoes.forEach(b => b.onclick = () => escolher(+b.dataset.comeca));
