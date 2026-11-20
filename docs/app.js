@@ -81,7 +81,8 @@ function aviso(texto, erro = false) {
 }
 
 // ---------- Blocos comuns ----------
-const marca = sobre => `<header class="marca"><div class="neve" aria-hidden="true"></div><span class="sobre">${esc(sobre)} · Natal 2026</span><h1>Amigo Secreto dos <span>Mendoncinhas</span></h1><div class="pisca" aria-hidden="true">${'<i></i>'.repeat(14)}</div></header>`;
+// A estrela do cabeçalho é o atalho discreto para o painel do administrador.
+const marca = sobre => `<header class="marca"><div class="neve" aria-hidden="true"></div><a class="estrela" href="${BASE}#admin" aria-label="Área do administrador">★</a><span class="sobre">${esc(sobre)} · Natal 2026</span><h1>Amigo Secreto dos <span>Mendoncinhas</span></h1><div class="pisca" aria-hidden="true">${'<i></i>'.repeat(14)}</div></header>`;
 const contadorHTML = n => `<div class="contador"><span class="bola"><strong>${n}</strong></span><p>${n === 1 ? 'Mendoncinha já está' : 'Mendoncinhas já estão'} na roda do amigo secreto!</p></div>`;
 function fasesHTML(fase) {
   const i = FASES.indexOf(fase);

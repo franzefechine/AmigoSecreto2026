@@ -72,8 +72,9 @@ main.largo { max-width: 760px; }
   animation: neva 14s linear infinite;
 }
 @keyframes neva { to { background-position: 30px 180px, -20px 148px, 40px 192px; } }
-.marca::after {
-  content: "★"; position: absolute; top: 12px; right: 18px; font-size: 34px; line-height: 1; color: var(--hero-ouro);
+.marca > .estrela {
+  position: absolute; top: 4px; right: 10px; z-index: 1; padding: 8px; font-size: 34px; line-height: 1; color: var(--hero-ouro);
+  text-decoration: none; cursor: default;
   text-shadow: 0 0 16px color-mix(in srgb, var(--hero-ouro) 70%, transparent);
 }
 .marca .sobre { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--hero-ouro); font-weight: 700; }
