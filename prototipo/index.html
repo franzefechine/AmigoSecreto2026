@@ -226,11 +226,14 @@ main.largo { max-width: 760px; }
 .pessoa .quem { flex: 1 1 180px; min-width: 0; }
 .pessoa .quem b { display: block; }
 .pessoa .quem span { color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
-.pill { font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.pill { display: inline-flex; align-items: center; height: 24px; font-size: 13px; font-weight: 700; line-height: 1; padding: 0 10px; border-radius: 999px; white-space: nowrap; }
+.status { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 .pill.sim { background: var(--pine-soft); color: var(--pine); }
 .pill.nao { background: var(--berry-soft); color: var(--berry); }
 .pill.neutro { background: var(--sunk); color: var(--muted); }
-.acoes { display: flex; gap: 6px; flex-wrap: wrap; }
+.acoes { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; flex-basis: 100%; }
+.acoes:empty { display: none; }
+.acoes .btn { height: 42px; padding: 0 16px; font-size: 15px; line-height: 1; border-radius: 10px; white-space: nowrap; }
 .restricoes { flex-basis: 100%; background: var(--sunk); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
 .restricoes .grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 6px 12px; }
 .restricoes label { display: flex; gap: 8px; align-items: center; font-size: 15px; cursor: pointer; }
@@ -591,13 +594,22 @@ function telaAdmin() {
   const nome = id => P[id].nome;
   const sorteado = estado.sorteio;
   const tirou = id => { const i = sorteado.indexOf(id); return sorteado[(i + 1) % sorteado.length]; };
-  const acaoPessoa = p => {
-    if (estado.fase <= 1) return p.sugeriu ? '<span class="pill sim">Sugeriu presente</span>' : `<span class="pill nao">Sem sugestão</span><button class="btn peq claro" data-lembrar="${p.id}">Lembrar</button>`;
+  // Etiquetas de situação (ficam embaixo do nome).
+  const statusPessoa = p => {
+    if (estado.fase <= 1) return p.sugeriu ? '<span class="pill sim">Sugeriu presente</span>' : '<span class="pill nao">Sem sugestão</span>';
     if (estado.fase === 2) return `<span class="pill neutro">${[...estado.restricoes].filter(k => k.split('-').map(Number).includes(p.id)).length} restrições</span>`;
-    // "Lembrar compra" só aparece depois que a pessoa recebeu o aviso de quem tirou.
-    const envio = `${p.enviado ? '<span class="pill sim">Enviado</span>' : '<span class="pill neutro">Não enviado</span>'}<button class="btn peq" data-enviar="${p.id}">${p.enviado ? 'Reenviar' : 'Enviar'}</button>`;
+    const envio = p.enviado ? '<span class="pill sim">Enviado</span>' : '<span class="pill neutro">Não enviado</span>';
     if (!p.enviado) return envio;
-    return envio + (p.comprou ? '<span class="pill sim">Comprou</span>' : `<span class="pill nao">Não comprou</span><button class="btn peq claro" data-lembrar-compra="${p.id}">Lembrar compra</button>`);
+    return envio + (p.comprou ? '<span class="pill sim">Comprou</span>' : '<span class="pill nao">Não comprou</span>');
+  };
+  // Botões de ação (todos do mesmo tamanho).
+  const acaoPessoa = p => {
+    if (estado.fase <= 1) return p.sugeriu ? '' : `<button class="btn claro" data-lembrar="${p.id}">Lembrar</button>`;
+    if (estado.fase === 2) return '';
+    // "Lembrar compra" só aparece depois que a pessoa recebeu o aviso de quem tirou.
+    const envio = `<button class="btn" data-enviar="${p.id}">${p.enviado ? 'Reenviar' : 'Enviar'}</button>`;
+    if (!p.enviado || p.comprou) return envio;
+    return envio + `<button class="btn claro" data-lembrar-compra="${p.id}">Lembrar compra</button>`;
   };
   return `<div class="tela">${marca('Painel do administrador')}
     ${fasesHTML()}
@@ -640,8 +652,8 @@ function telaAdmin() {
       ${estado.fase <= 1 ? `<p class="sutil">${P.length - sugeriram} pessoas ainda não sugeriram presente.</p>` : ''}
       ${estado.fase === 3 ? `<p class="sutil">Envie a mensagem de revelação para cada pessoa. Depois do envio aparece o botão "Lembrar compra" para quem ainda não marcou que comprou.</p>` : ''}
       <ul class="pessoas">${P.map(p => `<li class="pessoa">
-        <div class="quem"><b>${esc(p.nome)}</b><span>${esc(p.cel)}</span>${estado.fase === 3 && estado.mostrarResultado ? `<span> · tirou ${esc(nome(tirou(p.id)))}</span>` : ''}</div>
-        <div class="acoes">${acaoPessoa(p)}${estado.fase <= 2 && !sorteado ? `<button class="btn peq claro" data-restr="${p.id}" aria-expanded="${estado.abertas.has(p.id)}">Não pode tirar…</button>` : ''}</div>
+        <div class="quem"><b>${esc(p.nome)}</b><span>${esc(p.cel)}</span>${estado.fase === 3 && estado.mostrarResultado ? `<span> · tirou ${esc(nome(tirou(p.id)))}</span>` : ''}<div class="status">${statusPessoa(p)}</div></div>
+        <div class="acoes">${acaoPessoa(p)}${estado.fase <= 2 && !sorteado ? `<button class="btn claro" data-restr="${p.id}" aria-expanded="${estado.abertas.has(p.id)}">Não pode tirar…</button>` : ''}</div>
         ${estado.abertas.has(p.id) ? `<div class="restricoes"><b>${esc(p.nome)} não pode tirar:</b><div class="grade">${P.filter(o => o.id !== p.id).map(o => `<label><input type="checkbox" data-a="${p.id}" data-b="${o.id}" ${estado.restricoes.has(chave(p.id, o.id)) ? 'checked' : ''}>${esc(o.nome)}</label>`).join('')}</div></div>` : ''}
       </li>`).join('')}</ul>
     </section></div>`;
