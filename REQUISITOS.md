@@ -1,6 +1,6 @@
 # Requisitos — Amigo Secreto dos Mendoncinhas
 
-> **Status:** v4. Quase fechado. Os itens marcados com ❓ ainda precisam de definição.
+> **Status:** v5. Requisitos fechados.
 
 ## 1. Objetivo
 
@@ -33,9 +33,8 @@ O administrador abre e fecha cada fase.
 - **RF-02** Não aceitar celular repetido. Validar o formato: DDD + 9 dígitos.
 - **RF-03** Ao se cadastrar, o participante vê uma confirmação e as regras básicas.
 - **RF-04** O administrador pode editar, remover ou cadastrar pessoas manualmente.
-- **RF-05** O cadastro exige um **código da família**, divulgado no grupo, para
-  evitar cadastros de estranhos.
-  - ❓ Qual será o código? Sugestão: `MENDONCINHAS26`.
+- **RF-05** O cadastro não exige código. O administrador revisa a lista e remove
+  cadastros indevidos.
 - **RF-06** O cadastro só é aceito enquanto a Fase 1 estiver aberta.
 
 ## 5. Fase 2: Sugestão de presente
@@ -89,15 +88,14 @@ O administrador abre e fecha cada fase.
 - **RF-25** **Contador de Mendoncinhas:** a página de cadastro e o link pessoal mostram
   quantas pessoas já se cadastraram, por exemplo "23 Mendoncinhas já estão no amigo secreto!".
 - **RF-26** **Contagem regressiva** em dias, horas e minutos até a troca de presentes
-  na véspera de Natal, visível no link pessoal.
-  - ❓ Horário e local da troca no dia 24/12/2026.
+  na véspera de Natal (24/12/2026), visível no link pessoal.
 
 ## 10. Regras exibidas
 
 - Ninguém tira a si mesmo.
 - Mantenha segredo sobre quem você tirou.
 - **Valor mínimo do presente: R$ 150,00.**
-- Troca de presentes na **véspera de Natal (24/12/2026)**. ❓ Horário e local.
+- Troca de presentes na **véspera de Natal (24/12/2026)**.
 
 ## 11. Requisitos não funcionais
 
@@ -112,14 +110,19 @@ O administrador abre e fecha cada fase.
 - **RNF-07** Testes automatizados para as regras do sorteio.
 - **RNF-08** O acesso ao painel do administrador exige uma senha de administrador.
 
-## 12. Prazos sugeridos
+## 12. Prazos
 
-| Fase | Período |
+| Fase | Prazo inicial |
 |---|---|
-| Cadastro | ❓ até 30/11 |
-| Sugestão de presente | ❓ até 07/12 |
-| Sorteio e revelação | ❓ 08/12 |
+| Cadastro | até 30/11/2026 |
+| Sugestão de presente | até 07/12/2026 |
+| Sorteio e revelação | 08/12/2026 |
 | Troca de presentes | 24/12/2026 (véspera de Natal) |
+
+- **RF-27** O administrador pode **alterar os prazos** a qualquer momento no painel.
+- **RF-28** O administrador pode **avançar de fase antes do prazo**, por exemplo
+  quando todos já tiverem se cadastrado. Os prazos aparecem para os participantes
+  como referência e não bloqueiam nada automaticamente.
 
 ## 13. Fora do escopo
 
