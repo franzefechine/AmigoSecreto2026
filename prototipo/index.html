@@ -138,7 +138,12 @@ main.largo { max-width: 760px; }
 .fases li.atual::before { background: var(--gold); }
 
 /* Formulários */
-.campo { display: flex; flex-direction: column; gap: 6px; }
+.campo { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+/* iPhone: o campo de data ignora a largura e vaza da coluna sem estas regras */
+.campo input[type="date"] { -webkit-appearance: none; appearance: none; display: block; min-width: 0; max-width: 100%; min-height: 50px; text-align: left; }
+.campo input[type="date"]::-webkit-date-and-time-value { text-align: left; }
+.etapas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.etapas .btn { width: 100%; padding-inline: 10px; }
 .campo label { font-weight: 700; font-size: 15px; }
 .campo input, .campo textarea, .campo select {
   width: 100%; padding: 12px 14px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--bg); font-size: 17px;
@@ -598,11 +603,12 @@ function telaAdmin() {
     ${fasesHTML()}
     <div class="resumo"><div><b>${P.length}</b><span>cadastrados</span></div><div><b>${sugeriram}</b><span>sugeriram presente</span></div><div><b>${compraram}</b><span>já compraram</span></div></div>
 
-    <section class="cartao"><h2>Fase atual: ${FASES[estado.fase]}</h2>
+    <section class="cartao"><h2>Etapa atual: ${FASES[estado.fase]}</h2>
       <p class="sutil">Você pode avançar antes do prazo, por exemplo se todos já se cadastraram.</p>
-      <div class="btn-linha">
-        <button class="btn claro" id="voltar" ${estado.fase === 0 ? 'disabled' : ''}>← Voltar fase</button>
-        <button class="btn" id="avancar" ${estado.fase === 3 || (estado.fase === 2 && !sorteado) ? 'disabled' : ''}>Avançar para ${FASES[Math.min(estado.fase + 1, 3)]} →</button>
+      ${estado.fase < 3 ? `<p>Próxima etapa: <b>${FASES[estado.fase + 1]}</b></p>` : '<p>Esta é a última etapa.</p>'}
+      <div class="etapas">
+        <button class="btn claro" id="voltar" ${estado.fase === 0 ? 'disabled' : ''}>← Voltar</button>
+        <button class="btn" id="avancar" ${estado.fase === 3 || (estado.fase === 2 && !sorteado) ? 'disabled' : ''}>Avançar →</button>
       </div>
       ${estado.fase === 2 && !sorteado ? '<p class="sutil">Faça o sorteio para liberar a revelação.</p>' : ''}
     </section>
