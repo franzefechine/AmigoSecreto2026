@@ -191,3 +191,20 @@ test('planilha antiga (sem a coluna linkEnviadoEm) ganha a coluna nova', () => {
   assert.ok(cab.includes('linkEnviadoEm'));
   assert.strictEqual(cab[0], 'id');
 });
+
+test('alerta: conta cadastros novos desde um horário, sem nomes', () => {
+  const s = novoServidor();
+  cadastrarVarios(s, ['Ana', 'Bia']);
+  const aba = s.planilha.getSheetByName('Participantes');
+  const col = aba.getRange(1, 1, 1, aba.getLastColumn()).getValues()[0].indexOf('cadastradoEm');
+  aba.dados[1][col] = '2026-11-01T10:00:00.000Z'; // Ana: cadastro antigo
+  aba.dados[2][col] = '2026-11-01T10:00:00.000Z'; // Bia: cadastro antigo
+  assert.ok(s.pedir({ acao: 'cadastrar', nome: 'Caio', celular: '21977776666' }).ok);
+  const r = s.pedir({ acao: 'novos', desde: '2026-11-10T00:00:00Z' });
+  assert.strictEqual(r.ok, true);
+  assert.strictEqual(r.novos, 1);
+  assert.strictEqual(r.total, 3);
+  assert.ok(!JSON.stringify(r).includes('Caio'), 'não revela nomes');
+  assert.strictEqual(s.pedir({ acao: 'novos', desde: '2099-01-01T00:00:00Z' }).novos, 0, 'nada novo depois de agora');
+  assert.match(s.pedir({ acao: 'novos', desde: 'ontem' }).erro, /desde/);
+});

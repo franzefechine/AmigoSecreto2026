@@ -100,6 +100,7 @@ function json_(dados) {
 
 const ACOES = {
   status: { fn: acaoStatus_ },
+  novos: { fn: acaoNovos_ },
   cadastrar: { fn: acaoCadastrar_ },
   eu: { fn: acaoEu_ },
   salvarSugestoes: { fn: acaoSalvarSugestoes_ },
@@ -357,6 +358,17 @@ function sortearRoda_(ids, proibido) {
 
 function acaoStatus_(db) {
   return publico_(db);
+}
+
+/** Quantos se cadastraram desde um horário (só números, sem nomes): usado pelo alerta. */
+function acaoNovos_(db, pedido) {
+  const desde = new Date(pedido.desde);
+  if (isNaN(desde.getTime())) throw falha_('Informe "desde" como data e hora, por exemplo 2026-11-20T11:00:00Z.');
+  const novos = db.pessoas.filter(function (p) {
+    const quando = new Date(p.cadastradoEm);
+    return !isNaN(quando.getTime()) && quando > desde;
+  }).length;
+  return Object.assign(publico_(db), { desde: desde.toISOString(), novos: novos, total: db.pessoas.length });
 }
 
 function acaoCadastrar_(db, pedido) {
