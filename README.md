@@ -2,7 +2,7 @@
 
 Site do amigo secreto da família Mendonça. Os participantes se cadastram, sugerem
 presentes, descobrem quem tiraram numa caixa de presente animada e marcam quando
-compraram. O administrador cuida de tudo por um painel, e na véspera de Natal a
+compraram. O administrador cuida de tudo por um painel, e no dia da troca a
 roda é revelada pessoa por pessoa na TV.
 
 ## Como está organizado

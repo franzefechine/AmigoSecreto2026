@@ -92,8 +92,8 @@ const regrasHTML = info => `<section class="cartao"><h2>Regras</h2><ul class="re
   <li>Ninguém tira a si mesmo.</li>
   <li>Mantenha segredo sobre quem você tirou.</li>
   <li>Valor mínimo do presente: <b>${reais(info.valorMinimo)}</b>.</li>
-  <li>Troca de presentes na <b>véspera de Natal, ${dataBR(info.prazos.troca)}</b>.</li></ul></section>`;
-const regressivaHTML = info => `<section class="cartao"><h2>Contagem para a véspera de Natal</h2><div class="regressiva" id="regressiva" data-alvo="${esc(info.prazos.troca)}"></div></section>`;
+  <li>Troca de presentes em <b>${dataBR(info.prazos.troca)}</b>.</li></ul></section>`;
+const regressivaHTML = info => `<section class="cartao"><h2>Contagem para a troca de presentes</h2><div class="regressiva" id="regressiva" data-alvo="${esc(info.prazos.troca)}"></div></section>`;
 function atualizaRegressiva() {
   const el = $('#regressiva'); if (!el) return;
   const [a, m, d] = (el.dataset.alvo || '2026-12-24').split('-').map(Number);
@@ -442,7 +442,7 @@ const mensagens = {
     `👉 ${BASE}`,
     '',
     `💰 Presente de no mínimo *${reais(E.admin.valorMinimo)}*`,
-    `📅 Troca de presentes na *véspera de Natal (${dataBR(prazos().troca)})*`,
+    `📅 Troca de presentes em *${dataBR(prazos().troca)}*`,
     '',
     'Contamos com você! ❤️',
   ].join('\n'),
@@ -476,7 +476,7 @@ const mensagens = {
     `👉 ${linkPessoal(p.token)}`,
     '',
     `💰 Presente de no mínimo *${reais(E.admin.valorMinimo)}*`,
-    `📅 Troca na *véspera de Natal (${dataBR(prazos().troca)})*`,
+    `📅 Troca de presentes em *${dataBR(prazos().troca)}*`,
     '🤫 _E bico calado: é segredo!_',
   ].join('\n'),
   lembrarCompra: p => {
@@ -489,7 +489,7 @@ const mensagens = {
       'Quando comprar, abra seu link e toque em *"Já comprei o presente!"* ✅',
       'Assim quem você tirou fica sabendo que o presente está garantido _(sem saber que foi você)_. 😉',
       '',
-      dias > 0 ? `⏳ ${dias === 1 ? '*Falta 1 dia*' : `*Faltam ${dias} dias*`} para a véspera de Natal!` : '🎄 *É hoje a troca de presentes!*',
+      dias > 0 ? `⏳ ${dias === 1 ? '*Falta 1 dia*' : `*Faltam ${dias} dias*`} para a troca de presentes!` : '🎄 *É hoje a troca de presentes!*',
       `👉 ${linkPessoal(p.token)}`,
     ].join('\n');
   },

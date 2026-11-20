@@ -6,7 +6,7 @@
 
 Organizar o amigo secreto da família em **fases**, para manter todo mundo
 animado: cadastro → sugestão de presente → sorteio → revelação de quem cada um tirou.
-A troca de presentes será na **véspera de Natal, 24/12/2026**.
+A troca de presentes acontece na data definida no painel (hoje, 25/12/2026). O site mostra só a data, sem dizer "véspera de Natal", porque ela pode mudar.
 
 ## 2. Perfis
 
@@ -92,14 +92,14 @@ O administrador abre e fecha cada fase.
 - **RF-25** **Contador de Mendoncinhas:** a página de cadastro e o link pessoal mostram
   quantas pessoas já se cadastraram, por exemplo "23 Mendoncinhas já estão no amigo secreto!".
 - **RF-26** **Contagem regressiva** em dias, horas e minutos até a troca de presentes
-  na véspera de Natal (24/12/2026), visível no link pessoal.
+  na data da troca de presentes, visível no link pessoal.
 
 ## 10. Regras exibidas
 
 - Ninguém tira a si mesmo.
 - Mantenha segredo sobre quem você tirou.
 - **Valor mínimo do presente: R$ 150,00.**
-- Troca de presentes na **véspera de Natal (24/12/2026)**.
+- Troca de presentes em **DD/MM** (a data definida no painel).
 
 ## 10a. Extras
 
@@ -145,7 +145,7 @@ O administrador abre e fecha cada fase.
 | Cadastro | até 30/11/2026 |
 | Sugestão de presente | até 07/12/2026 |
 | Sorteio e revelação | 08/12/2026 |
-| Troca de presentes | 24/12/2026 (véspera de Natal) |
+| Troca de presentes | definida no painel (hoje, 25/12/2026) |
 
 - **RF-27** O administrador pode **alterar os prazos** a qualquer momento no painel.
 - **RF-28** O administrador pode **avançar de fase antes do prazo**, por exemplo
