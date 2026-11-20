@@ -308,6 +308,12 @@ main.largo { max-width: 760px; }
 #app:fullscreen .tv-para { font-size: 13vw; }
 #app:fullscreen .tv .btn { font-size: 24px; padding: 18px 30px; }
 #app:fullscreen .tv-roda { font-size: 22px; }
+.tv-escolha { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 680px; }
+.tv-escolha .btn { font-size: 16px; padding: 10px 14px; }
+.tv-escolha .btn:disabled { opacity: 1; cursor: default; }
+.tv-escolha .btn:hover:not(:disabled), .tv-escolha .btn.destaque { background: var(--hero-ouro); color: var(--hero); }
+#app:fullscreen .tv-escolha { max-width: 80vw; gap: 12px; }
+#app:fullscreen .tv-escolha .btn { font-size: 22px; padding: 14px 20px; }
 .tv-barra { display: flex; justify-content: flex-end; }
 .tv-barra .btn { font-size: 15px; padding: 10px 14px; }
 #app:fullscreen .tv-barra { position: fixed; top: 16px; right: 16px; z-index: 2; }
@@ -365,6 +371,7 @@ const estado = {
   natalPasso: 0,
   natalRevelado: false,
   natalAuto: false,
+  natalInicio: null,
 };
 const chave = (a, b) => a < b ? a + '-' + b : b + '-' + a;
 // Restrições iniciais: mesmo grupo familiar, nos dois sentidos.
@@ -711,12 +718,25 @@ function ligaAdmin() {
 
 function telaNatal() {
   if (!estado.sorteio) { estado.sorteio = sortear(estado.pessoas, estado.restricoes); estado.natalAuto = true; }
-  const S = estado.sorteio, n = S.length, i = estado.natalPasso, P = estado.pessoas;
+  const P = estado.pessoas, n = estado.sorteio.length, i = estado.natalPasso;
+  if (estado.natalInicio !== null && !estado.sorteio.includes(estado.natalInicio)) estado.natalInicio = null;
+  // A roda começa por quem foi escolhido para abrir a revelação.
+  const k = estado.natalInicio === null ? 0 : estado.sorteio.indexOf(estado.natalInicio);
+  const S = estado.sorteio.slice(k).concat(estado.sorteio.slice(0, k));
   const rodape = `${estado.natalAuto ? '<p class="sutil">Na simulação, o sorteio foi feito agora só para mostrar esta tela.</p>' : ''}
     <p class="sutil">Abra esta tela na TV na hora da troca. A família tenta adivinhar, você toca em "Revelar" e o presente é entregue. Quem recebeu é o próximo da roda.</p>
     <p class="sutil">No computador, a barra de espaço ou a seta → também avançam. Para sair da tela cheia, aperte Esc.</p>
     <p class="erro" id="aviso-tela" hidden>Este aparelho não permite tela cheia em sites; o iPhone, por exemplo, não permite. Para a TV, abra esta tela num computador ligado à TV, ou espelhe a tela do celular e deixe-o na horizontal.</p>`;
   const botaoTela = `<div class="tv-barra"><button class="btn claro" id="tela-cheia">${document.fullscreenElement ? 'Sair da tela cheia' : '⛶ Tela cheia'}</button></div>`;
+  if (estado.natalInicio === null) {
+    const porNome = S.slice().sort((a, b) => P[a].nome.localeCompare(P[b].nome, 'pt-BR'));
+    return `<div class="tela">${botaoTela}<section class="tv"><div class="neve" aria-hidden="true"></div>
+      <span class="sobre">Noite de Natal</span>
+      <p class="tv-de">Quem vai começar?</p>
+      <div class="tv-escolha">${porNome.map(id => `<button class="btn vidro" data-comeca="${id}">${esc(P[id].nome)}</button>`).join('')}</div>
+      <div class="btn-linha"><button class="btn ouro" id="natal-sorteia-inicio">Sortear quem começa</button></div>
+    </section>${rodape}</div>`;
+  }
   if (i >= n) {
     return `<div class="tela">${botaoTela}<section class="tv"><div class="neve" aria-hidden="true"></div>
       <span class="sobre">Noite de Natal</span>
@@ -739,7 +759,23 @@ function ligaNatal() {
   const rv = $('#natal-revela');
   if (rv) rv.onclick = () => { estado.natalRevelado = true; render(); const r = $('#tv-para').getBoundingClientRect(); confete(r.left + r.width / 2, r.top + r.height / 2); };
   const px = $('#natal-prox'); if (px) px.onclick = () => { estado.natalPasso++; estado.natalRevelado = false; render(); };
-  const ri = $('#natal-reinicia'); if (ri) ri.onclick = () => { estado.natalPasso = 0; estado.natalRevelado = false; render(); };
+  const ri = $('#natal-reinicia'); if (ri) ri.onclick = () => { estado.natalPasso = 0; estado.natalRevelado = false; estado.natalInicio = null; render(); };
+  const escolher = id => { estado.natalInicio = id; estado.natalPasso = 0; estado.natalRevelado = false; render(); };
+  const opcoes = [...document.querySelectorAll('[data-comeca]')];
+  opcoes.forEach(b => b.onclick = () => escolher(+b.dataset.comeca));
+  const so = $('#natal-sorteia-inicio');
+  if (so) so.onclick = () => {
+    const alvo = Math.floor(Math.random() * opcoes.length);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { escolher(+opcoes[alvo].dataset.comeca); return; }
+    so.disabled = true; opcoes.forEach(b => b.disabled = true);
+    const voltas = opcoes.length * 2 + alvo; let passo = 0;
+    (function gira() {
+      opcoes.forEach(b => b.classList.remove('destaque'));
+      opcoes[passo % opcoes.length].classList.add('destaque');
+      if (passo < voltas) { passo++; setTimeout(gira, 40 + passo * 2.5); }
+      else setTimeout(() => escolher(+opcoes[alvo].dataset.comeca), 900);
+    })();
+  };
   $('#tela-cheia').onclick = async () => {
     const app = $('#app');
     try {

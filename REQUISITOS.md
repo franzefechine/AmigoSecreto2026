@@ -114,6 +114,8 @@ O administrador abre e fecha cada fase.
   - O ícone abre o link pessoal da pessoa.
 - **RF-32** **Revelação da noite de Natal.** Na fase de revelação, o administrador abre
   uma tela para a TV que mostra a roda pessoa por pessoa:
+  - primeiro a tela pergunta **quem vai começar**: o administrador toca no nome ou em
+    "Sortear quem começa", que faz uma roleta entre os nomes;
   - aparece "Fulano tirou…" e o nome fica escondido até o administrador tocar em "Revelar", com confete;
   - quem recebeu o presente é o próximo da roda;
   - no final aparece "Feliz Natal!" com a roda completa.
