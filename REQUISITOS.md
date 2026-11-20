@@ -82,6 +82,9 @@ O administrador abre e fecha cada fase.
 - **RF-23** Quem vai **receber** o presente vê no próprio link a mensagem
   **"🎁 Seu presente já foi comprado!"**, sem revelar quem comprou.
 - **RF-24** No painel, o administrador acompanha quantos presentes já foram comprados.
+- **RF-24a** Ao lado de quem ainda não marcou a compra, o painel mostra o botão
+  **"Lembrar compra"**. Ele abre o WhatsApp com uma mensagem pronta que pede para
+  a pessoa tocar em "Já comprei o presente!" no link pessoal.
 
 ## 9. Contador e contagem regressiva
 

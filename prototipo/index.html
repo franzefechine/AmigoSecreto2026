@@ -457,7 +457,7 @@ function telaAdmin() {
   const acaoPessoa = p => {
     if (estado.fase <= 1) return p.sugeriu ? '<span class="pill sim">Sugeriu presente</span>' : `<span class="pill nao">Sem sugestão</span><button class="btn peq claro" data-lembrar="${p.id}">Lembrar</button>`;
     if (estado.fase === 2) return `<span class="pill neutro">${[...estado.restricoes].filter(k => k.split('-').map(Number).includes(p.id)).length} restrições</span>`;
-    return `${p.enviado ? '<span class="pill sim">Enviado</span>' : '<span class="pill neutro">Não enviado</span>'}${p.comprou ? '<span class="pill sim">Comprou</span>' : ''}<button class="btn peq" data-enviar="${p.id}">${p.enviado ? 'Reenviar' : 'Enviar'}</button>`;
+    return `${p.enviado ? '<span class="pill sim">Enviado</span>' : '<span class="pill neutro">Não enviado</span>'}${p.comprou ? '<span class="pill sim">Comprou</span>' : `<span class="pill nao">Não comprou</span><button class="btn peq claro" data-lembrar-compra="${p.id}">Lembrar compra</button>`}<button class="btn peq" data-enviar="${p.id}">${p.enviado ? 'Reenviar' : 'Enviar'}</button>`;
   };
   return `<div class="tela">${marca('Painel do administrador')}
     ${fasesHTML()}
@@ -493,6 +493,7 @@ function telaAdmin() {
 
     <section class="cartao"><h2>Participantes</h2>
       ${estado.fase <= 1 ? `<p class="sutil">${P.length - sugeriram} pessoas ainda não sugeriram presente.</p>` : ''}
+      ${estado.fase === 3 ? `<p class="sutil">${P.length - compraram} pessoas ainda não marcaram que compraram o presente.</p>` : ''}
       <ul class="pessoas">${P.map(p => `<li class="pessoa">
         <div class="quem"><b>${esc(p.nome)}</b><span>${esc(p.cel)}</span>${estado.fase === 3 && estado.mostrarResultado ? `<span> · tirou ${esc(nome(tirou(p.id)))}</span>` : ''}</div>
         <div class="acoes">${acaoPessoa(p)}${estado.fase <= 2 && !sorteado ? `<button class="btn peq claro" data-restr="${p.id}" aria-expanded="${estado.abertas.has(p.id)}">Não pode tirar…</button>` : ''}</div>
@@ -521,6 +522,11 @@ function ligaAdmin() {
   document.querySelectorAll('[data-lembrar]').forEach(b => b.onclick = () => {
     const p = estado.pessoas[+b.dataset.lembrar];
     whatsapp(p, `Oi, ${p.nome}! 🎄 Ainda falta você sugerir seu presente no Amigo Secreto dos Mendoncinhas. O prazo vai até ${dataBR(estado.prazos.sugestao)}.\n\nÉ só abrir seu link: ${linkPessoal(p)}`);
+  });
+  document.querySelectorAll('[data-lembrar-compra]').forEach(b => b.onclick = () => {
+    const p = estado.pessoas[+b.dataset.lembrarCompra];
+    const dias = Math.max(Math.ceil((new Date(2026, 11, 24) - new Date()) / 864e5), 0);
+    whatsapp(p, `Oi, ${p.nome}! 🎁 Já comprou o presente do seu amigo secreto?\n\nQuando comprar, abra seu link e toque em "Já comprei o presente!". Assim quem você tirou fica sabendo que o presente está garantido (sem saber que foi você).\n\nFaltam ${dias} dias para a véspera de Natal!\n\nSeu link: ${linkPessoal(p)}`);
   });
   document.querySelectorAll('[data-enviar]').forEach(b => b.onclick = () => {
     const p = estado.pessoas[+b.dataset.enviar];
