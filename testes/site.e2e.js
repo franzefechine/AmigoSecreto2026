@@ -72,6 +72,20 @@ const PASTA_FOTOS = process.env.FOTOS || '';
   await foto('2-painel-cadastro');
   passo('login do administrador e envio do link pessoal');
 
+  // 2b. Mudar o prazo e gerar a mensagem logo em seguida (antes de o salvamento terminar)
+  await pagina.fill('#pz-cadastro', '2026-11-29');
+  await pagina.click('#convite');
+  await pagina.waitForTimeout(300);
+  const convite = new URL(whatsapp[whatsapp.length - 1]).searchParams.get('text');
+  assert.ok(convite.includes('cadastro até *29/11*'), 'mensagem usa a data nova: ' + convite);
+  await pagina.waitForFunction(() => document.querySelector('#prazos-estado').textContent.includes('Prazos salvos'));
+  assert.strictEqual(servidor.pedir({ acao: 'status' }).prazos.cadastro, '2026-11-29', 'data nova salva no servidor');
+  await pagina.goto(SITE);
+  await pagina.waitForSelector('text=Cadastro aberto até 29/11');
+  await pagina.goto(SITE + '#admin');
+  await pagina.waitForSelector('.pessoas');
+  passo('prazo alterado vale na hora para as mensagens e é salvo sozinho');
+
   // 3. Link pessoal: sugestões
   const dados = servidor.pedir({ acao: 'adminDados', senha: SENHA });
   const token = nome => dados.pessoas.find(p => p.nome === nome).token;

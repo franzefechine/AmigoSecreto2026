@@ -419,6 +419,14 @@ async function adm(botao, acao, dados = {}, sucesso) {
 }
 
 // Mensagens do WhatsApp. Formatação do WhatsApp: *negrito* e _itálico_.
+const PRAZOS = ['cadastro', 'sugestao', 'sorteio', 'troca'];
+let timerPrazos;
+/** Prazos para as mensagens: os que estão na tela do painel (mesmo que ainda salvando). */
+function prazos() {
+  const atuais = Object.assign({}, E.admin.prazos);
+  PRAZOS.forEach(k => { const el = $('#pz-' + k); if (el && el.value) atuais[k] = el.value; });
+  return atuais;
+}
 const diasAte = iso => {
   const [a, m, d] = iso.split('-').map(Number);
   return Math.max(Math.ceil((new Date(a, m - 1, d) - new Date()) / 864e5), 0);
@@ -430,11 +438,11 @@ const mensagens = {
     '',
     'Chegou a hora de entrar na roda! 🎁',
     '',
-    `📝 Faça seu cadastro até *${dataBR(E.admin.prazos.cadastro)}*:`,
+    `📝 Faça seu cadastro até *${dataBR(prazos().cadastro)}*:`,
     `👉 ${BASE}`,
     '',
     `💰 Presente de no mínimo *${reais(E.admin.valorMinimo)}*`,
-    `📅 Troca de presentes na *véspera de Natal (${dataBR(E.admin.prazos.troca)})*`,
+    `📅 Troca de presentes na *véspera de Natal (${dataBR(prazos().troca)})*`,
     '',
     'Contamos com você! ❤️',
   ].join('\n'),
@@ -445,7 +453,7 @@ const mensagens = {
     `👉 ${linkPessoal(p.token)}`,
     '',
     'Por ele você vai:',
-    `🎁 sugerir o presente que gostaria de ganhar (até *${dataBR(E.admin.prazos.sugestao)}*)`,
+    `🎁 sugerir o presente que gostaria de ganhar (até *${dataBR(prazos().sugestao)}*)`,
     '🔍 descobrir quem você tirou, depois do sorteio',
     '',
     '📌 _Guarde esta mensagem! O link é só seu, não compartilhe._',
@@ -454,7 +462,7 @@ const mensagens = {
     `Oi, *${p.nome}*! 🎄`,
     '',
     'Ainda falta você *sugerir seu presente* no Amigo Secreto dos Mendoncinhas. 🎁',
-    `⏰ O prazo vai até *${dataBR(E.admin.prazos.sugestao)}*.`,
+    `⏰ O prazo vai até *${dataBR(prazos().sugestao)}*.`,
     '',
     'É rapidinho, é só abrir seu link:',
     `👉 ${linkPessoal(p.token)}`,
@@ -468,11 +476,11 @@ const mensagens = {
     `👉 ${linkPessoal(p.token)}`,
     '',
     `💰 Presente de no mínimo *${reais(E.admin.valorMinimo)}*`,
-    `📅 Troca na *véspera de Natal (${dataBR(E.admin.prazos.troca)})*`,
+    `📅 Troca na *véspera de Natal (${dataBR(prazos().troca)})*`,
     '🤫 _E bico calado: é segredo!_',
   ].join('\n'),
   lembrarCompra: p => {
-    const dias = diasAte(E.admin.prazos.troca);
+    const dias = diasAte(prazos().troca);
     return [
       `Oi, *${p.nome}*! 🛍️`,
       '',
@@ -598,13 +606,16 @@ function telaAdmin() {
     </section>
 
     <section class="cartao"><h2>Prazos</h2>
-      <p class="sutil">Aparecem para os participantes como referência. Mudanças são salvas na hora.</p>
+      <p class="sutil">Aparecem para os participantes e nas mensagens do WhatsApp. Mudanças são salvas sozinhas.</p>
       <div class="prazos">
         <div class="campo"><label for="pz-cadastro">Cadastro até</label><input type="date" id="pz-cadastro" value="${esc(D.prazos.cadastro)}"></div>
         <div class="campo"><label for="pz-sugestao">Sugestões até</label><input type="date" id="pz-sugestao" value="${esc(D.prazos.sugestao)}"></div>
         <div class="campo"><label for="pz-sorteio">Sorteio em</label><input type="date" id="pz-sorteio" value="${esc(D.prazos.sorteio)}"></div>
         <div class="campo"><label for="pz-troca">Troca de presentes</label><input type="date" id="pz-troca" value="${esc(D.prazos.troca)}"></div>
-      </div></section>
+      </div>
+      <p id="prazos-estado" class="sutil" role="status">✓ Prazos salvos.</p>
+      <button class="btn" id="salvar-prazos" hidden>Salvar prazos</button>
+    </section>
 
     <div class="btn-linha"><button class="btn claro" id="atualizar">Atualizar dados</button><button class="btn claro" id="sair">Sair do painel</button></div>
   </div>`, true);
@@ -627,10 +638,36 @@ function ligarAdmin() {
 
   on('#avancar', b => adm(b, 'adminConfig', { fase: FASES[iFase + 1] }, () => { ui.confirmar = null; aviso('Etapa: ' + NOME_FASE[FASES[iFase + 1]]); }));
   on('#voltar', b => adm(b, 'adminConfig', { fase: FASES[iFase - 1] }, () => { ui.confirmar = null; aviso('Etapa: ' + NOME_FASE[FASES[iFase - 1]]); }));
-  ['cadastro', 'sugestao', 'sorteio', 'troca'].forEach(k => {
+  // Prazos: salvos sozinhos pouco depois de mudar (e ao sair do campo). No iPhone o evento
+  // "change" do campo de data nem sempre dispara, por isso ouvimos também "input" e "blur".
+  const estadoPrazos = $('#prazos-estado'), botaoPrazos = $('#salvar-prazos');
+  const pendentes = () => {
+    const novos = {};
+    PRAZOS.forEach(k => { const v = $('#pz-' + k).value; if (v && v !== D.prazos[k]) novos[k] = v; });
+    return novos;
+  };
+  const salvarPrazos = () => {
+    clearTimeout(timerPrazos);
+    const novos = pendentes();
+    if (!Object.keys(novos).length) return;
+    estadoPrazos.textContent = 'Salvando…';
+    adm(botaoPrazos, 'adminConfig', { prazos: novos }, () => aviso('✓ Prazos salvos'));
+  };
+  const marcarMudanca = () => {
+    const mudou = Object.keys(pendentes()).length > 0;
+    estadoPrazos.textContent = mudou ? 'Alterações ainda não salvas…' : '✓ Prazos salvos.';
+    estadoPrazos.className = mudou ? 'erro' : 'sutil';
+    botaoPrazos.hidden = !mudou;
+    clearTimeout(timerPrazos);
+    if (mudou) timerPrazos = setTimeout(salvarPrazos, 1200);
+  };
+  PRAZOS.forEach(k => {
     const el = $('#pz-' + k);
-    el.onchange = () => { if (el.value) adm(null, 'adminConfig', { prazos: { [k]: el.value } }, () => aviso('Prazo salvo')); };
+    el.oninput = marcarMudanca;
+    el.onchange = marcarMudanca;
+    el.onblur = () => { if (Object.keys(pendentes()).length) salvarPrazos(); };
   });
+  botaoPrazos.onclick = salvarPrazos;
 
   on('#convite', () => abrirWhatsApp('', mensagens.convite()));
   on('#copiar-convite', async () => {
