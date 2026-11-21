@@ -1,0 +1,826 @@
+<title>Amigo Secreto dos Mendoncinhas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: uma coluna estreita de celular, centralizada; barra de simulação no topo troca entre as telas. */
+:root {
+  --bg: #EEF3EF;
+  --surface: #FFFFFF;
+  --sunk: #E3EBE5;
+  --ink: #15241C;
+  --muted: #56685E;
+  --line: #D3DDD6;
+  --pine: #1E5A42;
+  --pine-soft: #DCEBE2;
+  --berry: #B02840;
+  --berry-soft: #F6DEE2;
+  --gold: #B8861F;
+  --gold-soft: #F5E9CC;
+  --on-accent: #FFFFFF;
+  --sim: #15241C;
+  --on-sim: #EEF3EF;
+  /* Faixa de "noite de Natal": igual nos dois temas */
+  --hero: #0D3626;
+  --hero-2: #17573C;
+  --hero-fg: #FFFFFF;
+  --hero-ouro: #F2CB62;
+  --bola: #B5223B;
+  --bola-2: #E45369;
+  --luz-1: #FF5468; --luz-2: #FFD45A; --luz-3: #5DE394; --luz-4: #74B9FF;
+  --script: "Berkshire Swash", Georgia, serif;
+  --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", Verdana, system-ui, sans-serif;
+  --radius: 14px;
+}
+/* Sempre no modo claro, mesmo com o celular no modo escuro. */
+:root, :root[data-theme="dark"] { color-scheme: light; }
+
+* { box-sizing: border-box; }
+body {
+  background-color: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.5;
+  background-image: radial-gradient(circle, var(--line) 1.6px, transparent 2px), radial-gradient(circle, var(--line) 1px, transparent 1.4px);
+  background-size: 52px 52px, 31px 31px; background-position: 0 0, 14px 19px;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--sim); }
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+button, input, textarea, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+/* Barra de simulação */
+.sim {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--sim); color: var(--on-sim);
+  padding-block: 10px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.sim-inner { max-width: 760px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.sim-label { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .75; margin-right: auto; }
+.sim nav { display: flex; gap: 6px; flex-wrap: wrap; }
+.sim nav a {
+  color: var(--on-sim); text-decoration: none; font-size: 14px; font-weight: 700;
+  padding: 6px 12px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--on-sim) 30%, transparent);
+}
+.sim nav a[aria-current="page"] { background: var(--on-sim); color: var(--sim); }
+
+main {
+  max-width: 480px; margin: 0 auto;
+  padding-block: 20px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main.largo { max-width: 760px; }
+.tela { display: flex; flex-direction: column; gap: 18px; }
+
+/* Cabeçalho da marca */
+.marca {
+  position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 4px;
+  padding: 22px 20px 18px; border-radius: 20px; color: var(--hero-fg);
+  background: radial-gradient(120% 90% at 85% 0%, var(--hero-2), var(--hero) 70%);
+}
+.marca > * { position: relative; }
+.marca .neve, .tv .neve {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    radial-gradient(circle, color-mix(in srgb, var(--hero-fg) 90%, transparent) 1.6px, transparent 2.2px),
+    radial-gradient(circle, color-mix(in srgb, var(--hero-fg) 55%, transparent) 1px, transparent 1.6px),
+    radial-gradient(circle, color-mix(in srgb, var(--hero-fg) 75%, transparent) 2.2px, transparent 2.8px);
+  background-size: 60px 60px, 37px 37px, 96px 96px;
+  animation: neva 14s linear infinite;
+}
+@keyframes neva { to { background-position: 30px 180px, -20px 148px, 40px 192px; } }
+.marca::after {
+  content: "★"; position: absolute; top: 12px; right: 18px; font-size: 34px; line-height: 1; color: var(--hero-ouro);
+  text-shadow: 0 0 16px color-mix(in srgb, var(--hero-ouro) 70%, transparent);
+}
+.marca .sobre { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--hero-ouro); font-weight: 700; }
+.marca h1 { font-size: clamp(26px, 7vw, 34px); font-weight: 800; letter-spacing: -.01em; color: var(--hero-fg); }
+.marca h1 span { display: block; font-family: var(--script); font-weight: 400; color: var(--hero-ouro); font-size: 1.45em; line-height: 1.15; letter-spacing: 0; }
+.pisca {
+  display: flex; justify-content: space-between; margin-top: 12px; padding: 0 2px; height: 24px;
+  border-top: 2px solid color-mix(in srgb, var(--hero-fg) 30%, transparent);
+}
+.pisca i { width: 10px; height: 14px; margin-top: 1px; border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%; background: var(--c); box-shadow: 0 0 10px var(--c); animation: pisca 1.6s ease-in-out infinite; }
+.pisca i:nth-child(even) { margin-top: 5px; animation-delay: .8s; }
+.pisca i:nth-child(4n+1) { --c: var(--luz-1); }
+.pisca i:nth-child(4n+2) { --c: var(--luz-2); }
+.pisca i:nth-child(4n+3) { --c: var(--luz-3); }
+.pisca i:nth-child(4n) { --c: var(--luz-4); }
+@keyframes pisca { 50% { opacity: .35; box-shadow: none; } }
+@media (prefers-reduced-motion: reduce) { .marca .neve, .tv .neve, .pisca i { animation: none; } }
+
+.cartao { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.cartao h2 { font-size: 22px; }
+.sutil { color: var(--muted); font-size: 15px; }
+
+.contador { display: flex; align-items: center; gap: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 16px 14px; }
+.bola {
+  position: relative; flex: none; width: 70px; height: 70px; border-radius: 50%; display: grid; place-items: center;
+  background: radial-gradient(circle at 32% 28%, var(--bola-2), var(--bola) 62%);
+  box-shadow: inset -6px -8px 14px color-mix(in srgb, var(--hero) 35%, transparent);
+}
+.bola::before { content: ""; position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 20px; height: 10px; border-radius: 3px; background: var(--hero-ouro); }
+.bola strong { font-family: var(--display); font-size: 30px; font-weight: 800; color: var(--hero-fg); line-height: 1; font-variant-numeric: tabular-nums; }
+.contador p { font-weight: 700; }
+
+.regressiva { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+.regressiva div { background: var(--bola); border-radius: 12px; padding: 12px 4px 10px; box-shadow: inset 0 -4px 0 color-mix(in srgb, var(--hero) 30%, transparent); }
+.regressiva b { display: block; font-family: var(--display); font-size: 32px; font-weight: 800; color: var(--hero-ouro); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.regressiva span { font-size: 13px; color: var(--hero-fg); }
+
+/* Fases */
+.fases { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.fases li { font-size: 13px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--muted); }
+.fases li::before { content: ""; width: 100%; height: 6px; border-radius: 4px; background: var(--line); }
+.fases li.feita::before { background: var(--pine); }
+.fases li.atual { color: var(--ink); font-weight: 700; }
+.fases li.atual::before { background: var(--gold); }
+
+/* Formulários */
+.campo { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+/* iPhone: o campo de data ignora a largura e vaza da coluna sem estas regras */
+.campo input[type="date"] { -webkit-appearance: none; appearance: none; display: block; min-width: 0; max-width: 100%; min-height: 50px; text-align: left; }
+.campo input[type="date"]::-webkit-date-and-time-value { text-align: left; }
+.etapas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.etapas .btn { width: 100%; padding-inline: 10px; }
+.campo label { font-weight: 700; font-size: 15px; }
+.campo input, .campo textarea, .campo select {
+  width: 100%; padding: 12px 14px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--bg); font-size: 17px;
+}
+.campo input:focus, .campo textarea:focus { border-color: var(--pine); outline: none; }
+.dupla { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.erro { color: var(--berry); font-size: 14px; font-weight: 700; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border: 0; border-radius: 12px; padding: 14px 18px; font-weight: 700; font-size: 17px; cursor: pointer;
+  background: var(--pine); color: var(--on-accent); text-decoration: none;
+}
+.btn.berry { background: var(--berry); }
+.btn.claro { background: var(--sunk); color: var(--ink); }
+.btn.peq { padding: 8px 12px; font-size: 14px; border-radius: 10px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-linha { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.regras { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.regras b { color: var(--berry); }
+
+.aviso { border-radius: 12px; padding: 12px 14px; font-weight: 700; display: flex; gap: 10px; align-items: center; }
+.aviso.ok { background: var(--pine-soft); color: var(--pine); }
+.aviso.presente { background: var(--gold-soft); color: var(--ink); }
+
+.sugestao { border-top: 1px dashed var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+.sugestao:first-of-type { border-top: 0; padding-top: 0; }
+.sugestao h3 { font-size: 16px; color: var(--muted); font-family: var(--body); }
+
+/* Caixa de presente */
+.palco { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 96px 0 8px; }
+.caixa { position: relative; width: 190px; height: 190px; border: 0; background: none; cursor: pointer; padding: 0; }
+.caixa .corpo, .caixa .tampa {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  background: var(--berry);
+  background-image: linear-gradient(90deg, transparent calc(50% - 14px), var(--gold) calc(50% - 14px), var(--gold) calc(50% + 14px), transparent calc(50% + 14px));
+}
+.caixa .corpo { bottom: 0; width: 160px; height: 120px; border-radius: 0 0 10px 10px; z-index: 2; }
+.caixa .tampa { bottom: 112px; width: 184px; height: 40px; border-radius: 8px; z-index: 3; transition: transform .7s cubic-bezier(.3,1.6,.5,1), opacity .7s; }
+.caixa .laco { position: absolute; left: 50%; top: -30px; width: 76px; height: 36px; transform: translateX(-50%); }
+.caixa .laco::before, .caixa .laco::after {
+  content: ""; position: absolute; top: 4px; width: 34px; height: 28px; border: 9px solid var(--gold); border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+}
+.caixa .laco::before { left: 0; transform: rotate(-18deg); }
+.caixa .laco::after { right: 0; transform: rotate(18deg); }
+.caixa .bilhete {
+  position: absolute; left: 50%; bottom: 40px; width: 210px; transform: translate(-50%, 0) scale(.6); opacity: 0; z-index: 1;
+  background: var(--surface); border: 2px solid var(--gold); border-radius: 12px; padding: 14px 10px; text-align: center;
+  transition: transform .8s .35s cubic-bezier(.2,1.4,.4,1), opacity .4s .35s;
+}
+.caixa .bilhete small { display: block; color: var(--muted); font-size: 13px; }
+.caixa .bilhete strong { font-family: var(--display); font-size: 26px; font-weight: 800; color: var(--pine); }
+.caixa:not(.aberta) { animation: balanca 2.4s ease-in-out infinite; }
+.caixa.aberta .tampa { transform: translate(-30%, -150px) rotate(28deg); opacity: 0; }
+.caixa.aberta .bilhete { transform: translate(-50%, -125px) scale(1); opacity: 1; z-index: 4; }
+@keyframes balanca { 0%, 70%, 100% { rotate: 0deg; } 76% { rotate: -5deg; } 82% { rotate: 5deg; } 88% { rotate: -3deg; } 94% { rotate: 2deg; } }
+.dica-toque { font-weight: 700; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) {
+  .caixa:not(.aberta) { animation: none; }
+  .caixa .tampa, .caixa .bilhete { transition: opacity .2s; }
+}
+
+.lista-sug { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.lista-sug li { background: var(--sunk); border-radius: 10px; padding: 10px 12px; }
+.lista-sug a { color: var(--pine); font-weight: 700; font-size: 14px; }
+.ficha { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 15px; }
+.ficha dt { color: var(--muted); }
+.ficha dd { margin: 0; font-weight: 700; }
+
+/* Admin */
+.resumo { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.resumo div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.resumo b { display: block; font-family: var(--display); font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.resumo span { font-size: 13px; color: var(--muted); }
+.prazos { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.pessoas { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.pessoa { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+.pessoa:first-child { border-top: 0; }
+.pessoa .quem { flex: 1 1 180px; min-width: 0; }
+.pessoa .quem b { display: block; }
+.pessoa .quem span { color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+.pill { display: inline-flex; align-items: center; height: 24px; font-size: 13px; font-weight: 700; line-height: 1; padding: 0 10px; border-radius: 999px; white-space: nowrap; }
+.status { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.pill.sim { background: var(--pine-soft); color: var(--pine); }
+.pill.nao { background: var(--berry-soft); color: var(--berry); }
+.pill.neutro { background: var(--sunk); color: var(--muted); }
+.acoes { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; flex-basis: 100%; }
+.acoes:empty { display: none; }
+.acoes .btn { height: 42px; padding: 0 16px; font-size: 15px; line-height: 1; border-radius: 10px; white-space: nowrap; }
+.restricoes { flex-basis: 100%; background: var(--sunk); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.restricoes .grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 6px 12px; }
+.restricoes label { display: flex; gap: 8px; align-items: center; font-size: 15px; cursor: pointer; }
+.restricoes input { width: 20px; height: 20px; accent-color: var(--berry); }
+.roda { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 15px; }
+.roda li { background: var(--sunk); padding: 4px 10px; border-radius: 8px; font-weight: 700; }
+.roda li.seta { background: none; padding: 0; color: var(--gold); }
+.confirma { background: var(--berry-soft); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+
+.modal-fundo { position: fixed; inset: 0; background: color-mix(in srgb, var(--ink) 55%, transparent); display: flex; align-items: flex-end; justify-content: center; z-index: 20; padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+.modal { background: var(--surface); border-radius: 18px; padding: 20px; max-width: 460px; width: 100%; max-height: 100%; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+.bolha { background: #DCF8C6; color: #111B21; border-radius: 12px 12px 12px 2px; padding: 6px 6px 12px; font-size: 15px; display: flex; flex-direction: column; gap: 10px; }
+.bolha .txt { white-space: pre-wrap; padding: 0 8px; }
+.etiqueta-sim { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--gold); font-weight: 700; }
+
+/* Prévia do link no WhatsApp */
+.previa { background: #CDE9B5; border-radius: 8px; overflow: hidden; }
+.previa-img {
+  position: relative; aspect-ratio: 1.91 / 1; max-width: 100%; padding: 14px 16px; display: flex; flex-direction: column; justify-content: center;
+  color: var(--hero-fg); background: radial-gradient(120% 90% at 85% 0%, var(--hero-2), var(--hero) 70%);
+}
+.previa-img b { font-family: var(--display); font-size: 17px; }
+.previa-img em { font-family: var(--script); font-style: normal; color: var(--hero-ouro); font-size: 30px; line-height: 1.1; }
+.previa-img span { position: absolute; top: 10px; right: 14px; color: var(--hero-ouro); font-size: 24px; }
+.previa-txt { padding: 8px 10px; display: flex; flex-direction: column; gap: 2px; font-size: 13px; line-height: 1.35; }
+.previa-txt span, .previa-txt small { color: #54656F; }
+
+/* Tela inicial do celular */
+.instalar { flex-direction: row; flex-wrap: wrap; align-items: center; }
+.instalar-txt { flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.instalar .btn { flex: 1 1 100%; }
+.instalar-topo { display: flex; gap: 14px; align-items: center; }
+.icone {
+  flex: none; width: 60px; height: 60px; border-radius: 15px; display: grid; place-items: center; font-size: 30px; color: var(--hero-ouro);
+  background: radial-gradient(120% 90% at 85% 0%, var(--hero-2), var(--hero) 70%);
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--hero) 30%, transparent);
+}
+.passos { margin: 4px 0 0; padding-left: 22px; display: flex; flex-direction: column; gap: 4px; }
+
+/* Confete da revelação */
+.confete { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 30; }
+
+/* Noite de Natal (tela para a TV) */
+.tv {
+  position: relative; overflow: hidden; border-radius: 24px; padding: 44px 24px 36px; text-align: center; color: var(--hero-fg);
+  background: radial-gradient(120% 90% at 50% 0%, var(--hero-2), var(--hero) 70%);
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
+.tv > * { position: relative; }
+.tv .sobre { font-size: 14px; letter-spacing: .12em; text-transform: uppercase; color: var(--hero-ouro); font-weight: 700; }
+.tv-de { font-family: var(--display); font-weight: 800; font-size: clamp(26px, 6vw, 46px); line-height: 1.15; }
+.tv-para {
+  font-family: var(--script); color: var(--hero-ouro); font-size: clamp(48px, 13vw, 104px); line-height: 1.1;
+  text-shadow: 0 0 24px color-mix(in srgb, var(--hero-ouro) 50%, transparent);
+}
+.tv-para.oculto { opacity: .45; animation: suspense 1.2s ease-in-out infinite; }
+@keyframes suspense { 50% { transform: scale(1.12); } }
+.tv-roda { justify-content: center; }
+.tv-roda li { background: color-mix(in srgb, var(--hero-fg) 14%, transparent); color: var(--hero-fg); }
+.tv-roda li.seta { background: none; color: var(--hero-ouro); }
+.btn.ouro { background: var(--hero-ouro); color: var(--hero); }
+.btn.vidro { background: color-mix(in srgb, var(--hero-fg) 16%, transparent); color: var(--hero-fg); }
+
+/* Tela cheia (para a TV) */
+#app:fullscreen { max-width: none; width: 100%; height: 100%; margin: 0; padding: 0; background: var(--hero); overflow: auto; }
+#app:fullscreen::backdrop { background: var(--hero); }
+#app:fullscreen .tela { min-height: 100%; gap: 0; }
+#app:fullscreen .tela > .sutil { display: none; }
+#app:fullscreen .tv { flex: 1; border-radius: 0; justify-content: center; gap: 4vh; }
+#app:fullscreen .tv .sobre { font-size: 2.2vw; }
+#app:fullscreen .tv-de { font-size: 6vw; }
+#app:fullscreen .tv-para { font-size: 13vw; }
+#app:fullscreen .tv .btn { font-size: 24px; padding: 18px 30px; }
+#app:fullscreen .tv-roda { font-size: 22px; }
+.tv-escolha { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 680px; }
+.tv-escolha .btn { font-size: 16px; padding: 10px 14px; }
+.tv-escolha .btn:disabled { opacity: 1; cursor: default; }
+.tv-escolha .btn:hover:not(:disabled), .tv-escolha .btn.destaque { background: var(--hero-ouro); color: var(--hero); }
+#app:fullscreen .tv-escolha { max-width: 80vw; gap: 12px; }
+#app:fullscreen .tv-escolha .btn { font-size: 22px; padding: 14px 20px; }
+.tv-barra { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
+.tv-barra .btn { font-size: 15px; padding: 10px 14px; }
+#app:fullscreen .tv-barra { position: fixed; top: 16px; right: 16px; z-index: 2; }
+#app:fullscreen .tv-barra .btn { background: color-mix(in srgb, var(--hero-fg) 14%, transparent); color: var(--hero-fg); font-size: 15px; padding: 10px 14px; }
+@media (prefers-reduced-motion: reduce) { .tv-para.oculto { animation: none; } }
+</style>
+
+<div class="sim">
+  <div class="sim-inner">
+    <span class="sim-label">Simulação · dados fictícios</span>
+    <nav aria-label="Telas da simulação">
+      <a href="#cadastro">Cadastro</a>
+      <a href="#sugestao">Sugestões</a>
+      <a href="#revelacao">Revelação</a>
+      <a href="#admin">Administrador</a>
+      <a href="#natal">Noite de Natal</a>
+    </nav>
+  </div>
+</div>
+
+<main id="app"></main>
+<div id="modal"></div>
+
+<script>
+// ---------- Dados fictícios ----------
+const NOMES = [
+  ['Vó Lurdes', '(31) 99812-4410', 'avos'], ['Vô Antônio', '(31) 99812-4411', 'avos'],
+  ['Tia Carla', '(31) 98877-1203', 'carla'], ['Tio Beto', '(31) 98877-1204', 'carla'],
+  ['Marina', '(31) 99145-2290', 'carla'], ['Rafael', '(31) 99302-7781', 'carla'],
+  ['Tia Sônia', '(21) 99650-3312', 'sonia'], ['Tio Jorge', '(21) 99650-3313', 'sonia'],
+  ['Lucas', '(21) 98221-0457', 'sonia'], ['Bia', '(21) 98734-9902', 'sonia'],
+  ['Júlia', '(11) 99418-6675', 'julia'], ['Pedro', '(11) 99418-6676', 'julia'],
+];
+const estado = {
+  fase: 1, // 0 cadastro, 1 sugestões, 2 sorteio, 3 revelação
+  prazos: { cadastro: '2026-11-30', sugestao: '2026-12-07', sorteio: '2026-12-08' },
+  pessoas: NOMES.map(([nome, cel, grupo], i) => ({ id: i, nome, cel, grupo, sugeriu: [0,1,3,4,6,8,9,10].includes(i), enviado: false, comprou: [1,4,7].includes(i) })),
+  restricoes: new Set(),
+  sorteio: null, // array de ids na ordem da roda
+  mostrarResultado: false,
+  confirmarRefazer: false,
+  logado: false,
+  abertas: new Set(),
+  euId: 2, // "Tia Carla" é a pessoa do link pessoal
+  cadastroFeito: null,
+  sugestoes: [
+    { desc: 'Livro "Torto Arado", capa dura', link: '' },
+    { desc: 'Jogo de taças de vinho', link: 'https://www.exemplo.com.br/tacas' },
+    { desc: '', link: '' },
+  ],
+  extras: { roupa: 'M', calcado: '37', naoGosta: 'Perfume doce' },
+  sugestoesSalvas: false,
+  caixaAberta: false,
+  euComprei: false,
+  natalPasso: 0,
+  natalRevelado: false,
+  natalAuto: false,
+  natalInicio: null,
+};
+const chave = (a, b) => a < b ? a + '-' + b : b + '-' + a;
+// Restrições iniciais: mesmo grupo familiar, nos dois sentidos.
+estado.pessoas.forEach(a => estado.pessoas.forEach(b => { if (a.id < b.id && a.grupo === b.grupo) estado.restricoes.add(chave(a.id, b.id)); }));
+
+const SUG_JORGE = [
+  { desc: 'Camisa do Cruzeiro 2026', link: 'https://www.exemplo.com.br/camisa' },
+  { desc: 'Kit de churrasco com tábua', link: '' },
+  { desc: 'Vinho tinto chileno', link: '' },
+];
+
+// ---------- Sorteio: roda única respeitando restrições ----------
+function sortear(pessoas, restricoes) {
+  const ids = pessoas.map(p => p.id);
+  if (ids.length < 3) return null;
+  const pode = (a, b) => a !== b && !restricoes.has(chave(a, b));
+  const embaralha = arr => { const c = arr.slice(); for (let i = c.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [c[i], c[j]] = [c[j], c[i]]; } return c; };
+  for (let tentativa = 0; tentativa < 200; tentativa++) {
+    const ordem = embaralha(ids);
+    const inicio = ordem[0];
+    const caminho = [inicio];
+    const usado = new Set([inicio]);
+    let passos = 0;
+    const busca = () => {
+      if (++passos > 20000) return false;
+      if (caminho.length === ids.length) return pode(caminho[caminho.length - 1], inicio);
+      const atual = caminho[caminho.length - 1];
+      for (const prox of embaralha(ids)) {
+        if (usado.has(prox) || !pode(atual, prox)) continue;
+        caminho.push(prox); usado.add(prox);
+        if (busca()) return true;
+        caminho.pop(); usado.delete(prox);
+      }
+      return false;
+    };
+    if (busca()) return caminho;
+  }
+  return null;
+}
+
+// ---------- Utilidades ----------
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const dataBR = iso => iso.split('-').reverse().slice(0, 2).join('/');
+const FASES = ['Cadastro', 'Sugestões', 'Sorteio', 'Revelação'];
+const fasesHTML = () => `<ol class="fases" aria-label="Fases do amigo secreto">${FASES.map((f, i) => `<li class="${i < estado.fase ? 'feita' : i === estado.fase ? 'atual' : ''}">${f}</li>`).join('')}</ol>`;
+const marca = (sobre) => `<header class="marca"><div class="neve" aria-hidden="true"></div><span class="sobre">${sobre} · Natal 2026</span><h1>Amigo Secreto dos <span>Mendoncinhas</span></h1><div class="pisca" aria-hidden="true">${'<i></i>'.repeat(14)}</div></header>`;
+const contadorHTML = () => `<div class="contador"><span class="bola"><strong>${estado.pessoas.length}</strong></span><p>Mendoncinhas já estão na roda do amigo secreto!</p></div>`;
+const regrasHTML = () => `<section class="cartao"><h2>Regras</h2><ul class="regras">
+  <li>Ninguém tira a si mesmo.</li>
+  <li>Mantenha segredo sobre quem você tirou.</li>
+  <li>Valor mínimo do presente: <b>R$ 150,00</b>.</li>
+  <li>Troca de presentes na <b>véspera de Natal, 24/12</b>.</li></ul></section>`;
+const regressivaHTML = () => `<section class="cartao"><h2>Contagem para a véspera de Natal</h2><div class="regressiva" id="regressiva"></div><p class="sutil">Contagem até a véspera de Natal, 24/12/2026.</p></section>`;
+function atualizaRegressiva() {
+  const el = $('#regressiva'); if (!el) return;
+  let ms = Math.max(new Date(2026, 11, 24, 0, 0, 0) - new Date(), 0);
+  const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60;
+  el.innerHTML = `<div><b>${d}</b><span>dias</span></div><div><b>${h}</b><span>horas</span></div><div><b>${m}</b><span>minutos</span></div>`;
+}
+setInterval(atualizaRegressiva, 30000);
+function mascaraCel(v) {
+  const d = v.replace(/\D/g, '').slice(0, 11);
+  if (d.length <= 2) return d.length ? '(' + d : '';
+  if (d.length <= 7) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+}
+function abrirModal(titulo, corpo) {
+  $('#modal').innerHTML = `<div class="modal-fundo" id="fundo"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+    <h2 id="mt">${titulo}</h2>${corpo}
+    <button class="btn" id="fecha">Fechar</button></div></div>`;
+  $('#fecha').onclick = fecharModal; $('#fundo').onclick = e => { if (e.target.id === 'fundo') fecharModal(); };
+  $('#fecha').focus();
+}
+function whatsapp(pessoa, texto) {
+  abrirModal(`Mensagem para ${esc(pessoa.nome)}`, `<span class="etiqueta-sim">Simulação</span>
+    <p class="sutil">No site de verdade, este botão abre o WhatsApp com a mensagem pronta para ${esc(pessoa.cel)}. Aqui só mostramos como ela fica.</p>
+    <div class="bolha">
+      <div class="previa">
+        <div class="previa-img"><span aria-hidden="true">★</span><b>Amigo Secreto dos</b><em>Mendoncinhas</em></div>
+        <div class="previa-txt"><b>Amigo Secreto dos Mendoncinhas 🎄</b><span>Natal 2026 · Toque para abrir seu link pessoal</span><small>mendoncinhas.github.io</small></div>
+      </div>
+      <div class="txt">${esc(texto)}</div>
+    </div>`);
+}
+function mostrarInstalar() {
+  abrirModal('Adicionar à tela inicial', `<div class="instalar-topo"><span class="icone" aria-hidden="true">★</span>
+      <p>O ícone <b>Mendoncinhas</b> fica junto com seus aplicativos e abre direto o seu link pessoal.</p></div>
+    <div><b>No iPhone</b><ol class="passos"><li>Abra o link no Safari.</li><li>Toque em Compartilhar (o quadrado com a seta para cima).</li><li>Escolha "Adicionar à Tela de Início".</li></ol></div>
+    <div><b>No Android</b><ol class="passos"><li>Abra o link no Chrome.</li><li>Toque nos três pontinhos ⋮ no canto.</li><li>Escolha "Adicionar à tela inicial".</li></ol></div>
+    <p class="sutil">No site de verdade, no Android, o botão já adiciona o ícone direto.</p>`);
+}
+const instalarHTML = () => `<section class="cartao instalar"><span class="icone" aria-hidden="true">★</span>
+  <div class="instalar-txt"><h2>Tenha no seu celular</h2><p class="sutil">Coloque um ícone na tela inicial e abra seu link sem procurar no WhatsApp.</p></div>
+  <button class="btn claro" id="instalar">Adicionar à tela inicial</button></section>`;
+function confete(x, y) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const c = document.createElement('canvas'); c.className = 'confete'; document.body.appendChild(c);
+  const dpr = devicePixelRatio || 1, W = innerWidth, H = innerHeight;
+  c.width = W * dpr; c.height = H * dpr; const g = c.getContext('2d'); g.scale(dpr, dpr);
+  const cores = ['#F2CB62', '#B5223B', '#17573C', '#E45369', '#74B9FF'];
+  const ps = Array.from({ length: 150 }, () => ({ x, y, vx: (Math.random() - .5) * 10, vy: -Math.random() * 12 - 4, r: Math.random() * 4 + 2,
+    cor: cores[Math.random() * cores.length | 0], rot: Math.random() * 6, vr: (Math.random() - .5) * .3, bola: Math.random() < .35 }));
+  let t = 0;
+  (function passo() {
+    g.clearRect(0, 0, W, H);
+    ps.forEach(p => {
+      p.vy += .28; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      g.save(); g.translate(p.x, p.y); g.rotate(p.rot); g.fillStyle = p.cor;
+      if (p.bola) { g.beginPath(); g.arc(0, 0, p.r, 0, 7); g.fill(); } else g.fillRect(-p.r, -p.r / 2, p.r * 2, p.r);
+      g.restore();
+    });
+    if (++t < 160) requestAnimationFrame(passo); else c.remove();
+  })();
+}
+function fecharModal() { $('#modal').innerHTML = ''; }
+const linkPessoal = p => `https://mendoncinhas.github.io/amigo-secreto/#p-${(p.id * 7919 + 4243).toString(36)}x9k`;
+
+// ---------- Telas ----------
+function telaCadastro() {
+  if (estado.cadastroFeito) {
+    return `<div class="tela">${marca('Cadastro')}
+      <section class="cartao"><div class="aviso ok">✓ Cadastro feito!</div>
+      <h2>Bem-vindo à roda, ${esc(estado.cadastroFeito)}!</h2>
+      <p>Você vai receber pelo WhatsApp o seu <b>link pessoal</b>. É nele que você vai sugerir presentes e, depois do sorteio, descobrir quem tirou.</p>
+      <button class="btn claro" id="outro">Cadastrar outra pessoa</button></section>
+      ${contadorHTML()}${regrasHTML()}</div>`;
+  }
+  return `<div class="tela">${marca('Cadastro')}
+    ${contadorHTML()}
+    <form class="cartao" id="form-cad" novalidate>
+      <h2>Entre na roda</h2>
+      <p class="sutil">Cadastro aberto até ${dataBR(estado.prazos.cadastro)}.</p>
+      <div class="campo"><label for="cad-nome">Seu nome</label><input id="cad-nome" autocomplete="name" placeholder="Como a família te chama"></div>
+      <div class="campo"><label for="cad-cel">Celular com WhatsApp</label><input id="cad-cel" inputmode="numeric" autocomplete="tel" placeholder="(31) 99999-9999"></div>
+      <p class="erro" id="cad-erro" hidden></p>
+      <button class="btn" type="submit">Entrar no amigo secreto</button>
+    </form>
+    ${regrasHTML()}</div>`;
+}
+function ligaCadastro() {
+  const outro = $('#outro'); if (outro) { outro.onclick = () => { estado.cadastroFeito = null; render(); }; return; }
+  const cel = $('#cad-cel');
+  cel.oninput = () => { cel.value = mascaraCel(cel.value); };
+  $('#form-cad').onsubmit = e => {
+    e.preventDefault();
+    const nome = $('#cad-nome').value.trim(), c = cel.value, erro = $('#cad-erro');
+    const msg = !nome ? 'Escreva seu nome.' : c.replace(/\D/g, '').length !== 11 ? 'Confira o celular: DDD + 9 números.' : estado.pessoas.some(p => p.cel === c) ? 'Este celular já está cadastrado.' : '';
+    if (msg) { erro.textContent = msg; erro.hidden = false; return; }
+    estado.pessoas.push({ id: estado.pessoas.length, nome, cel: c, grupo: 'novo' + estado.pessoas.length, sugeriu: false, enviado: false, comprou: false });
+    estado.cadastroFeito = nome; estado.sorteio = null; render();
+  };
+}
+
+function telaSugestao() {
+  const eu = estado.pessoas[estado.euId];
+  const s = estado.sugestoes, x = estado.extras;
+  return `<div class="tela">${marca('Seu link pessoal')}
+    <p style="font-size:20px">Oi, <b>${esc(eu.nome)}</b>! O que você gostaria de ganhar?</p>
+    ${fasesHTML()}
+    ${contadorHTML()}
+    <form class="cartao" id="form-sug">
+      <h2>Suas sugestões de presente</h2>
+      <p class="sutil">Até 3 ideias. Quem te tirar vai ver esta lista. Você pode mudar até ${dataBR(estado.prazos.sugestao)}.</p>
+      ${s.map((g, i) => `<div class="sugestao"><h3>Sugestão ${i + 1}${i ? ' (opcional)' : ''}</h3>
+        <div class="campo"><label for="sug-${i}">O que é</label><input id="sug-${i}" value="${esc(g.desc)}" placeholder="Ex.: livro, perfume, camisa…"></div>
+        <div class="campo"><label for="sug-link-${i}">Link da loja (opcional)</label><input id="sug-link-${i}" type="url" value="${esc(g.link)}" placeholder="https://"></div></div>`).join('')}
+      <div class="sugestao"><h3>Para ajudar quem te tirou</h3>
+        <div class="dupla">
+          <div class="campo"><label for="ex-roupa">Tamanho de roupa</label><input id="ex-roupa" value="${esc(x.roupa)}"></div>
+          <div class="campo"><label for="ex-calcado">Calçado</label><input id="ex-calcado" inputmode="numeric" value="${esc(x.calcado)}"></div>
+        </div>
+        <div class="campo"><label for="ex-nao">Não gosto de…</label><input id="ex-nao" value="${esc(x.naoGosta)}"></div>
+      </div>
+      ${estado.sugestoesSalvas ? '<div class="aviso ok" role="status">✓ Sugestões salvas</div>' : ''}
+      <button class="btn" type="submit">Salvar sugestões</button>
+    </form>
+    ${instalarHTML()}${regressivaHTML()}${regrasHTML()}</div>`;
+}
+function ligaSugestao() {
+  $('#form-sug').onsubmit = e => {
+    e.preventDefault();
+    estado.sugestoes = estado.sugestoes.map((_, i) => ({ desc: $('#sug-' + i).value.trim(), link: $('#sug-link-' + i).value.trim() }));
+    estado.extras = { roupa: $('#ex-roupa').value, calcado: $('#ex-calcado').value, naoGosta: $('#ex-nao').value };
+    estado.sugestoesSalvas = true; estado.pessoas[estado.euId].sugeriu = true; render();
+  };
+}
+
+function telaRevelacao() {
+  const eu = estado.pessoas[estado.euId];
+  return `<div class="tela">${marca('Seu link pessoal')}
+    <p style="font-size:20px">Oi, <b>${esc(eu.nome)}</b>! Chegou a hora.</p>
+    ${fasesHTML().replace(/class="(feita|atual|)"/g, 'class="feita"')}
+    <div class="aviso presente">🎁 Seu presente já foi comprado! Quem te tirou já está preparado.</div>
+    <section class="cartao">
+      <div class="palco">
+        <button class="caixa ${estado.caixaAberta ? 'aberta' : ''}" id="caixa" aria-label="${estado.caixaAberta ? 'Você tirou Tio Jorge' : 'Toque para abrir o presente'}">
+          <span class="bilhete"><small>Você tirou</small><strong>Tio Jorge</strong></span>
+          <span class="tampa"><span class="laco"></span></span>
+          <span class="corpo"></span>
+        </button>
+        <p class="dica-toque" id="dica">${estado.caixaAberta ? 'Shhh… é segredo!' : 'Toque no presente para abrir'}</p>
+      </div>
+    </section>
+    <div id="depois" ${estado.caixaAberta ? '' : 'hidden'}>
+      <div class="tela">
+        <section class="cartao"><h2>O que o Tio Jorge gostaria de ganhar</h2>
+          <ul class="lista-sug">${SUG_JORGE.map(s => `<li>${esc(s.desc)}${s.link ? `<br><a href="${esc(s.link)}" target="_blank" rel="noopener">Ver na loja</a>` : ''}</li>`).join('')}</ul>
+          <dl class="ficha"><dt>Roupa</dt><dd>G</dd><dt>Calçado</dt><dd>42</dd><dt>Não gosta de</dt><dd>Gravata</dd></dl>
+        </section>
+        <section class="cartao">
+          ${estado.euComprei
+            ? `<div class="aviso ok">✓ Você marcou que já comprou. O Tio Jorge vai ver "Seu presente já foi comprado!".</div><button class="btn claro" id="comprei">Desmarcar</button>`
+            : `<h2>Já comprou o presente?</h2><p class="sutil">Quem você tirou vai ver um aviso, sem saber que foi você.</p><button class="btn berry" id="comprei">Já comprei o presente!</button>`}
+        </section>
+      </div>
+    </div>
+    ${instalarHTML()}${regressivaHTML()}${regrasHTML()}</div>`;
+}
+function ligaRevelacao() {
+  $('#caixa').onclick = () => {
+    if (estado.caixaAberta) return;
+    estado.caixaAberta = true;
+    $('#caixa').classList.add('aberta');
+    $('#caixa').setAttribute('aria-label', 'Você tirou Tio Jorge');
+    $('#dica').textContent = 'Shhh… é segredo!';
+    const r = $('#caixa').getBoundingClientRect();
+    setTimeout(() => confete(r.left + r.width / 2, r.top + 30), 450);
+    setTimeout(() => { const d = $('#depois'); if (d) d.hidden = false; }, 900);
+  };
+  const c = $('#comprei'); if (c) c.onclick = () => { estado.euComprei = !estado.euComprei; estado.pessoas[estado.euId].comprou = estado.euComprei; render(); };
+}
+
+function telaAdmin() {
+  if (!estado.logado) {
+    return `<div class="tela">${marca('Administrador')}
+      <form class="cartao" id="form-login"><h2>Entrar no painel</h2>
+        <div class="campo"><label for="adm-senha">Senha do administrador</label><input id="adm-senha" type="password" autocomplete="current-password"></div>
+        <p class="sutil">Na simulação, qualquer senha funciona.</p>
+        <button class="btn" type="submit">Entrar</button></form></div>`;
+  }
+  const P = estado.pessoas;
+  const sugeriram = P.filter(p => p.sugeriu).length, compraram = P.filter(p => p.comprou).length;
+  const nome = id => P[id].nome;
+  const sorteado = estado.sorteio;
+  const tirou = id => { const i = sorteado.indexOf(id); return sorteado[(i + 1) % sorteado.length]; };
+  // Etiquetas de situação (ficam embaixo do nome).
+  const statusPessoa = p => {
+    if (estado.fase <= 1) return p.sugeriu ? '<span class="pill sim">Sugeriu presente</span>' : '<span class="pill nao">Sem sugestão</span>';
+    if (estado.fase === 2) return `<span class="pill neutro">${[...estado.restricoes].filter(k => k.split('-').map(Number).includes(p.id)).length} restrições</span>`;
+    const envio = p.enviado ? '<span class="pill sim">Enviado</span>' : '<span class="pill neutro">Não enviado</span>';
+    if (!p.enviado) return envio;
+    return envio + (p.comprou ? '<span class="pill sim">Comprou</span>' : '<span class="pill nao">Não comprou</span>');
+  };
+  // Botões de ação (todos do mesmo tamanho).
+  const acaoPessoa = p => {
+    if (estado.fase <= 1) return p.sugeriu ? '' : `<button class="btn claro" data-lembrar="${p.id}">Lembrar</button>`;
+    if (estado.fase === 2) return '';
+    // "Lembrar compra" só aparece depois que a pessoa recebeu o aviso de quem tirou.
+    const envio = `<button class="btn" data-enviar="${p.id}">${p.enviado ? 'Reenviar' : 'Enviar'}</button>`;
+    if (!p.enviado || p.comprou) return envio;
+    return envio + `<button class="btn claro" data-lembrar-compra="${p.id}">Lembrar compra</button>`;
+  };
+  return `<div class="tela">${marca('Painel do administrador')}
+    ${fasesHTML()}
+    <div class="resumo"><div><b>${P.length}</b><span>cadastrados</span></div><div><b>${sugeriram}</b><span>sugeriram presente</span></div><div><b>${compraram}</b><span>já compraram</span></div></div>
+
+    <section class="cartao"><h2>Etapa atual: ${FASES[estado.fase]}</h2>
+      <p class="sutil">Você pode avançar antes do prazo, por exemplo se todos já se cadastraram.</p>
+      ${estado.fase < 3 ? `<p>Próxima etapa: <b>${FASES[estado.fase + 1]}</b></p>` : '<p>Esta é a última etapa.</p>'}
+      <div class="etapas">
+        <button class="btn claro" id="voltar" ${estado.fase === 0 ? 'disabled' : ''}>← Voltar</button>
+        <button class="btn" id="avancar" ${estado.fase === 3 || (estado.fase === 2 && !sorteado) ? 'disabled' : ''}>Avançar →</button>
+      </div>
+      ${estado.fase === 2 && !sorteado ? '<p class="sutil">Faça o sorteio para liberar a revelação.</p>' : ''}
+    </section>
+
+    <section class="cartao"><h2>Prazos</h2>
+      <div class="prazos">
+        <div class="campo"><label for="pz-cad">Cadastro até</label><input type="date" id="pz-cad" value="${estado.prazos.cadastro}"></div>
+        <div class="campo"><label for="pz-sug">Sugestões até</label><input type="date" id="pz-sug" value="${estado.prazos.sugestao}"></div>
+        <div class="campo"><label for="pz-sor">Sorteio em</label><input type="date" id="pz-sor" value="${estado.prazos.sorteio}"></div>
+      </div></section>
+
+    ${estado.fase >= 2 ? `<section class="cartao"><h2>Sorteio</h2>
+      ${sorteado ? `<div class="aviso ok">✓ Sorteio feito: uma roda única com ${sorteado.length} pessoas.</div>
+        <div class="btn-linha"><button class="btn claro" id="espiar">${estado.mostrarResultado ? 'Esconder resultado' : 'Ver resultado (espiar)'}</button>
+        <button class="btn claro" id="refazer">Refazer sorteio</button></div>
+        ${estado.mostrarResultado ? `<ol class="roda" aria-label="Roda do sorteio">${sorteado.map(id => `<li>${esc(nome(id))}</li><li class="seta" aria-hidden="true">→</li>`).join('')}<li>${esc(nome(sorteado[0]))}</li></ol>` : ''}
+        ${estado.confirmarRefazer ? `<div class="confirma"><b>Refazer o sorteio?</b><p>O resultado atual será descartado e você vai precisar reenviar as mensagens para todos.</p>
+          <div class="btn-linha"><button class="btn berry" id="sim-refazer">Sim, refazer</button><button class="btn claro" id="nao-refazer">Cancelar</button></div></div>` : ''}`
+      : `<p>Antes de sortear, confira as restrições de cada pessoa na lista abaixo. Elas valem nos dois sentidos.</p>
+        <p class="erro" id="sorteio-erro" hidden></p>
+        <button class="btn berry" id="sortear">Fazer o sorteio</button>`}
+    </section>` : ''}
+
+    ${estado.fase === 3 ? `<section class="cartao"><h2>Noite de Natal</h2>
+      <p class="sutil">Na hora da troca de presentes, abra a revelação geral na TV. A roda aparece pessoa por pessoa.</p>
+      <a class="btn berry" href="#natal">Abrir revelação da noite de Natal</a></section>` : ''}
+
+    <section class="cartao"><h2>Participantes</h2>
+      ${estado.fase <= 1 ? `<p class="sutil">${P.length - sugeriram} pessoas ainda não sugeriram presente.</p>` : ''}
+      ${estado.fase === 3 ? `<p class="sutil">Envie a mensagem de revelação para cada pessoa. Depois do envio aparece o botão "Lembrar compra" para quem ainda não marcou que comprou.</p>` : ''}
+      <ul class="pessoas">${P.map(p => `<li class="pessoa">
+        <div class="quem"><b>${esc(p.nome)}</b><span>${esc(p.cel)}</span>${estado.fase === 3 && estado.mostrarResultado ? `<span> · tirou ${esc(nome(tirou(p.id)))}</span>` : ''}<div class="status">${statusPessoa(p)}</div></div>
+        <div class="acoes">${acaoPessoa(p)}${estado.fase <= 2 && !sorteado ? `<button class="btn claro" data-restr="${p.id}" aria-expanded="${estado.abertas.has(p.id)}">Não pode tirar…</button>` : ''}</div>
+        ${estado.abertas.has(p.id) ? `<div class="restricoes"><b>${esc(p.nome)} não pode tirar:</b><div class="grade">${P.filter(o => o.id !== p.id).map(o => `<label><input type="checkbox" data-a="${p.id}" data-b="${o.id}" ${estado.restricoes.has(chave(p.id, o.id)) ? 'checked' : ''}>${esc(o.nome)}</label>`).join('')}</div></div>` : ''}
+      </li>`).join('')}</ul>
+    </section></div>`;
+}
+function ligaAdmin() {
+  const login = $('#form-login');
+  if (login) { login.onsubmit = e => { e.preventDefault(); estado.logado = true; render(); }; return; }
+  $('#avancar').onclick = () => { estado.fase = Math.min(estado.fase + 1, 3); render(); };
+  $('#voltar').onclick = () => { estado.fase = Math.max(estado.fase - 1, 0); render(); };
+  [['pz-cad', 'cadastro'], ['pz-sug', 'sugestao'], ['pz-sor', 'sorteio']].forEach(([id, k]) => { $('#' + id).onchange = e => { estado.prazos[k] = e.target.value; }; });
+  const s = $('#sortear');
+  if (s) s.onclick = () => {
+    const r = sortear(estado.pessoas, estado.restricoes);
+    if (!r) { const e = $('#sorteio-erro'); e.textContent = 'Não dá para formar uma roda única com essas restrições. Remova algumas e tente de novo.'; e.hidden = false; return; }
+    estado.sorteio = r; estado.abertas.clear(); estado.pessoas.forEach(p => p.enviado = false); render();
+  };
+  const esp = $('#espiar'); if (esp) esp.onclick = () => { estado.mostrarResultado = !estado.mostrarResultado; render(); };
+  const ref = $('#refazer'); if (ref) ref.onclick = () => { estado.confirmarRefazer = true; render(); };
+  const sr = $('#sim-refazer'); if (sr) sr.onclick = () => { estado.sorteio = sortear(estado.pessoas, estado.restricoes); estado.confirmarRefazer = false; estado.pessoas.forEach(p => p.enviado = false); render(); };
+  const nr = $('#nao-refazer'); if (nr) nr.onclick = () => { estado.confirmarRefazer = false; render(); };
+  document.querySelectorAll('[data-restr]').forEach(b => b.onclick = () => { const id = +b.dataset.restr; estado.abertas.has(id) ? estado.abertas.delete(id) : estado.abertas.add(id); render(); });
+  document.querySelectorAll('.restricoes input').forEach(c => c.onchange = () => { const k = chave(+c.dataset.a, +c.dataset.b); c.checked ? estado.restricoes.add(k) : estado.restricoes.delete(k); render(); });
+  document.querySelectorAll('[data-lembrar]').forEach(b => b.onclick = () => {
+    const p = estado.pessoas[+b.dataset.lembrar];
+    whatsapp(p, `Oi, ${p.nome}! 🎄 Ainda falta você sugerir seu presente no Amigo Secreto dos Mendoncinhas. O prazo vai até ${dataBR(estado.prazos.sugestao)}.\n\nÉ só abrir seu link: ${linkPessoal(p)}`);
+  });
+  document.querySelectorAll('[data-lembrar-compra]').forEach(b => b.onclick = () => {
+    const p = estado.pessoas[+b.dataset.lembrarCompra];
+    const dias = Math.max(Math.ceil((new Date(2026, 11, 24) - new Date()) / 864e5), 0);
+    whatsapp(p, `Oi, ${p.nome}! 🎁 Já comprou o presente do seu amigo secreto?\n\nQuando comprar, abra seu link e toque em "Já comprei o presente!". Assim quem você tirou fica sabendo que o presente está garantido (sem saber que foi você).\n\nFaltam ${dias} dias para a véspera de Natal!\n\nSeu link: ${linkPessoal(p)}`);
+  });
+  document.querySelectorAll('[data-enviar]').forEach(b => b.onclick = () => {
+    const p = estado.pessoas[+b.dataset.enviar];
+    whatsapp(p, `Oi, ${p.nome}! 🎁 O sorteio do Amigo Secreto dos Mendoncinhas foi feito!\n\nAbra seu link e toque no presente para descobrir quem você tirou: ${linkPessoal(p)}\n\nLembre: presente de no mínimo R$ 150,00, troca na véspera de Natal. E bico calado! 🤫`);
+    p.enviado = true; render();
+  });
+}
+
+function telaNatal() {
+  if (!estado.sorteio) { estado.sorteio = sortear(estado.pessoas, estado.restricoes); estado.natalAuto = true; }
+  const P = estado.pessoas, n = estado.sorteio.length, i = estado.natalPasso;
+  if (estado.natalInicio !== null && !estado.sorteio.includes(estado.natalInicio)) estado.natalInicio = null;
+  // A roda começa por quem foi escolhido para abrir a revelação.
+  const k = estado.natalInicio === null ? 0 : estado.sorteio.indexOf(estado.natalInicio);
+  const S = estado.sorteio.slice(k).concat(estado.sorteio.slice(0, k));
+  const rodape = `${estado.natalAuto ? '<p class="sutil">Na simulação, o sorteio foi feito agora só para mostrar esta tela.</p>' : ''}
+    <p class="sutil">Abra esta tela na TV na hora da troca. A família tenta adivinhar, você toca em "Revelar" e o presente é entregue. Quem recebeu é o próximo da roda.</p>
+    <p class="sutil">No computador, a barra de espaço ou a seta → também avançam. Para sair da tela cheia, aperte Esc.</p>
+    <p class="erro" id="aviso-tela" hidden>Este aparelho não permite tela cheia em sites; o iPhone, por exemplo, não permite. Para a TV, abra esta tela num computador ligado à TV, ou espelhe a tela do celular e deixe-o na horizontal.</p>`;
+  const botaoTela = `<div class="tv-barra">${estado.natalInicio !== null ? '<button class="btn claro" id="natal-recomeca">↺ Começar de novo</button>' : ''}<button class="btn claro" id="tela-cheia">${document.fullscreenElement ? 'Sair da tela cheia' : '⛶ Tela cheia'}</button></div>`;
+  if (estado.natalInicio === null) {
+    const porNome = S.slice().sort((a, b) => P[a].nome.localeCompare(P[b].nome, 'pt-BR'));
+    return `<div class="tela">${botaoTela}<section class="tv"><div class="neve" aria-hidden="true"></div>
+      <span class="sobre">Noite de Natal</span>
+      <p class="tv-de">Quem vai começar?</p>
+      <div class="tv-escolha">${porNome.map(id => `<button class="btn vidro" data-comeca="${id}">${esc(P[id].nome)}</button>`).join('')}</div>
+      <div class="btn-linha"><button class="btn ouro" id="natal-sorteia-inicio">Sortear quem começa</button></div>
+    </section>${rodape}</div>`;
+  }
+  if (i >= n) {
+    return `<div class="tela">${botaoTela}<section class="tv"><div class="neve" aria-hidden="true"></div>
+      <span class="sobre">Noite de Natal</span>
+      <p class="tv-para">Feliz Natal!</p>
+      <p class="tv-de">A roda dos Mendoncinhas</p>
+      <ol class="roda tv-roda">${S.map(id => `<li>${esc(P[id].nome)}</li><li class="seta" aria-hidden="true">→</li>`).join('')}<li>${esc(P[S[0]].nome)}</li></ol>
+    </section>${rodape}</div>`;
+  }
+  return `<div class="tela">${botaoTela}<section class="tv"><div class="neve" aria-hidden="true"></div>
+    <span class="sobre">Noite de Natal · ${i + 1} de ${n}</span>
+    <p class="tv-de">${esc(P[S[i]].nome)} tirou…</p>
+    <p class="tv-para ${estado.natalRevelado ? '' : 'oculto'}" id="tv-para">${estado.natalRevelado ? esc(P[S[(i + 1) % n]].nome) : '?'}</p>
+    <div class="btn-linha">${estado.natalRevelado
+      ? `<button class="btn ouro" id="natal-prox">${i + 1 === n ? 'Ver a roda completa' : 'Próximo →'}</button>`
+      : '<button class="btn ouro" id="natal-revela">Revelar</button>'}</div>
+  </section>${rodape}</div>`;
+}
+function ligaNatal() {
+  const rv = $('#natal-revela');
+  if (rv) rv.onclick = () => { estado.natalRevelado = true; render(); const r = $('#tv-para').getBoundingClientRect(); confete(r.left + r.width / 2, r.top + r.height / 2); };
+  const px = $('#natal-prox'); if (px) px.onclick = () => { estado.natalPasso++; estado.natalRevelado = false; render(); };
+  // Recomeçar fica fora do quadro e pede um segundo toque, para não recomeçar sem querer.
+  const ri = $('#natal-recomeca');
+  if (ri) ri.onclick = () => {
+    if (!ri.dataset.confirmar) {
+      ri.dataset.confirmar = '1'; ri.textContent = 'Toque de novo para recomeçar';
+      setTimeout(() => { if (ri.isConnected) { delete ri.dataset.confirmar; ri.textContent = '↺ Começar de novo'; } }, 3000);
+      return;
+    }
+    estado.natalPasso = 0; estado.natalRevelado = false; estado.natalInicio = null; render();
+  };
+  const escolher = id => { estado.natalInicio = id; estado.natalPasso = 0; estado.natalRevelado = false; render(); };
+  const opcoes = [...document.querySelectorAll('[data-comeca]')];
+  opcoes.forEach(b => b.onclick = () => escolher(+b.dataset.comeca));
+  const so = $('#natal-sorteia-inicio');
+  if (so) so.onclick = () => {
+    const alvo = Math.floor(Math.random() * opcoes.length);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { escolher(+opcoes[alvo].dataset.comeca); return; }
+    so.disabled = true; opcoes.forEach(b => b.disabled = true);
+    const voltas = opcoes.length * 2 + alvo; let passo = 0;
+    (function gira() {
+      opcoes.forEach(b => b.classList.remove('destaque'));
+      opcoes[passo % opcoes.length].classList.add('destaque');
+      if (passo < voltas) { passo++; setTimeout(gira, 40 + passo * 2.5); }
+      else setTimeout(() => escolher(+opcoes[alvo].dataset.comeca), 900);
+    })();
+  };
+  $('#tela-cheia').onclick = async () => {
+    const app = $('#app');
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else if (app.requestFullscreen) await app.requestFullscreen();
+      else if (app.webkitRequestFullscreen) app.webkitRequestFullscreen();
+      else throw new Error('sem tela cheia');
+    } catch (e) { const a = $('#aviso-tela'); if (a) a.hidden = false; }
+  };
+}
+document.addEventListener('fullscreenchange', () => {
+  if (rota() === 'natal') render();
+  else if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+});
+document.addEventListener('keydown', e => {
+  if (rota() !== 'natal') return;
+  const avancar = e.key === 'ArrowRight' || ((e.key === ' ' || e.key === 'Enter') && document.activeElement?.tagName !== 'BUTTON');
+  if (!avancar) return;
+  const b = $('#natal-revela') || $('#natal-prox');
+  if (b) { e.preventDefault(); b.click(); }
+});
+
+const TELAS = { cadastro: [telaCadastro, ligaCadastro], sugestao: [telaSugestao, ligaSugestao], revelacao: [telaRevelacao, ligaRevelacao], admin: [telaAdmin, ligaAdmin], natal: [telaNatal, ligaNatal] };
+function rota() { const h = location.hash.slice(1); return TELAS[h] ? h : 'cadastro'; }
+function render() {
+  const r = rota();
+  const app = $('#app');
+  const foco = document.activeElement && document.activeElement.id;
+  app.className = r === 'admin' || r === 'natal' ? 'largo' : '';
+  app.innerHTML = TELAS[r][0]();
+  TELAS[r][1]();
+  const ins = $('#instalar'); if (ins) ins.onclick = mostrarInstalar;
+  document.querySelectorAll('.sim nav a').forEach(a => a.setAttribute('aria-current', a.getAttribute('href') === '#' + r ? 'page' : 'false'));
+  atualizaRegressiva();
+  if (foco && document.getElementById(foco)) document.getElementById(foco).focus({ preventScroll: true });
+}
+let rotaAnterior = rota();
+window.addEventListener('hashchange', () => { if (rota() !== rotaAnterior) { rotaAnterior = rota(); render(); window.scrollTo(0, 0); } });
+render();
+</script>

@@ -1,0 +1,15 @@
+{
+  "name": "Amigo Secreto dos Mendoncinhas",
+  "short_name": "Mendoncinhas",
+  "description": "Amigo secreto da família Mendonça, Natal 2026.",
+  "display": "standalone",
+  "scope": "./",
+  "background_color": "#EEF3EF",
+  "theme_color": "#0D3626",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "icones/icone-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icones/icone-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icones/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
